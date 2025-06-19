@@ -24,7 +24,6 @@ pub mod tests {
         assert!(error_test(TestsErrorCollection::JpAddrTokens.value()));
         assert!(error_test(TestsErrorCollection::JpAddrAddressFormat.value()));
         assert!(error_test(TestsErrorCollection::JpAddrAddressSize.value()));
-
     }
     #[test]
     fn call_error() {
