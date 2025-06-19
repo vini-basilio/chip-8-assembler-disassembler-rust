@@ -3,10 +3,10 @@
 ## Status de Testes por Instrução
 
 ### Instruções com Um Token
-- [x] **00E0 (CLS)**
+- [x] **00E0 - CLS**
     - ✅ Erro léxico
     - ✅ Erro tokens
-- [x] **00EE (RET)**
+- [x] **00EE - RET **
     - ✅ Erro léxico
     - ✅ Erro tokens
     - ✅ Erro formato do endereço
@@ -14,20 +14,36 @@
 
 ### Instruções com Dois Tokens
 #### Valor Imediato
-- [ ] 1nnn - JP addr
-
+- [x] **1nnn - JP addr**
+  - ✅ Erro léxico
+  - ✅ Erro tokens
+  - ✅ Erro formato do endereço
+  - ✅ Erro limite do endereço
+- [x] **2nnn - CALL addr**
+  - ✅ Erro léxico
+  - ✅ Erro tokens
+  - ✅ Erro formato do endereço
+  - ✅ Erro limite do endereço
+- [x] Bnnn - JP V0, addr 
+  - ✅ Erro léxico
+  - ✅ Erro tokens
+  - ✅ Erro formato do endereço
+  - ✅ Erro limite do endereço
+  
 #### Registradores
 
 ### Instruções com Três Tokens
+#### Valor Imediato
+- [x] Annn - LD I, addr
+  - ✅ Erro léxico
+  - ✅ Erro tokens
+  - ✅ Erro formato do endereço
+  - ✅ Erro limite do endereço
 
 ### Instruções com Quatro Tokens
 
 ### Testes Pendentes
 #### Instruções que precisam ser testadas
-- [ ] 1nnn - JP addr
-- [ ] 2nnn - CALL addr
-- [ ] Bnnn - JP V0, addr 
-- [ ] Annn - LD I, addr
 - [ ] Ex9E - SKP Vx
 - [ ] ExA1 - SKNP Vx
 - [ ] 3xkk - SE Vx, byte

@@ -7,6 +7,18 @@ pub enum TestsErrorCollection {
     JpAddrTokens,
     JpAddrAddressFormat,
     JpAddrAddressSize,
+    CallCase,
+    CallTokens,
+    CallAddressFormat,
+    CallAddressSize,
+    JpV0Case,
+    JpV0Tokens,
+    JpV0AddressFormat,
+    JpV0AddressSize,
+    LdICase,
+    LdITokens,
+    LdIAddressFormat,
+    LdIAddressSize,
 }
 
 impl TestsErrorCollection {
@@ -20,6 +32,18 @@ impl TestsErrorCollection {
             TestsErrorCollection::JpAddrTokens => "JP 0x200 vx",
             TestsErrorCollection::JpAddrAddressFormat => "JP 200",
             TestsErrorCollection::JpAddrAddressSize => "JP 0x1200",
+            TestsErrorCollection::CallCase => "call 0x200",
+            TestsErrorCollection::CallTokens => "CALL vx 0x200",
+            TestsErrorCollection::CallAddressFormat => "CALL 200",
+            TestsErrorCollection::CallAddressSize => "CALL 0x1200",
+            TestsErrorCollection::JpV0Case => "JP V0 0x200",
+            TestsErrorCollection::JpV0Tokens => "JP V0, 0x200",
+            TestsErrorCollection::JpV0AddressFormat => "JP V0, 200",
+            TestsErrorCollection::JpV0AddressSize => "JP V0, 0x1200",
+            TestsErrorCollection::LdICase => "LD i, 0x200",
+            TestsErrorCollection::LdITokens => "LD I, 0x200 v",
+            TestsErrorCollection::LdIAddressFormat => "LD I, 200",
+            TestsErrorCollection::LdIAddressSize => "LD I, 0x1200",
         }
     }
 }
