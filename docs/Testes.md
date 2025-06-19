@@ -9,8 +9,6 @@
 - [x] **00EE - RET **
     - ✅ Erro léxico
     - ✅ Erro tokens
-    - ✅ Erro formato do endereço
-    - ✅ Erro limite do endereço
 
 ### Instruções com Dois Tokens
 #### Valor Imediato
@@ -24,7 +22,7 @@
   - ✅ Erro tokens
   - ✅ Erro formato do endereço
   - ✅ Erro limite do endereço
-- [x] Bnnn - JP V0, addr 
+- [x] **Bnnn - JP V0, addr** 
   - ✅ Erro léxico
   - ✅ Erro tokens
   - ✅ Erro formato do endereço
@@ -33,14 +31,14 @@
 
 ### Instruções com Três Tokens
 #### Valor Imediato
-- [x] Annn - LD I, addr
+- [x] **Annn - LD I, addr**
   - ✅ Erro léxico
   - ✅ Erro tokens
   - ✅ Erro formato do endereço
   - ✅ Erro limite do endereço
   
 #### Lógicas e aritméticas 
-- [x] 8xy0 - LD Vx, Vy
+- [x] **8xy0 - LD Vx, Vy**
   - ✅ Erro léxico
   - ✅ Erro tokens
   - ✅ Erro no nome do registrator

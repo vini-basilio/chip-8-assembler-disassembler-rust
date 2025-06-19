@@ -2,166 +2,57 @@
 pub mod tests {
     use crate::modules::tests::error_dataset::TestsErrorCollection;
     use crate::modules::instruction_parse::parse_instruction;
-    #[test]
-    fn error_cls_case() {
-        let instruction = TestsErrorCollection::ClsCase.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_cls_token() {
-        let instruction = TestsErrorCollection::ClsTokens.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_ret_case() {
-        let instruction = TestsErrorCollection::RetCase.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_ret_token() {
-        let instruction = TestsErrorCollection::RetTokens.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_jpaddr_case() {
-        let instruction = TestsErrorCollection::JpAddrCase.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_jpaddr_token() {
-        let instruction = TestsErrorCollection::JpAddrTokens.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_jpaddr_addr_format() {
-        let instruction = TestsErrorCollection::JpAddrAddressFormat.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_jpaddr_addr_size() {
-        let instruction = TestsErrorCollection::JpAddrAddressSize.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_call_case() {
-        let instruction = TestsErrorCollection::CallCase.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_call_token() {
-        let instruction = TestsErrorCollection::CallTokens.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_call_addr_format() {
-        let instruction = TestsErrorCollection::CallAddressFormat.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_call_addr_size() {
-        let instruction = TestsErrorCollection::CallAddressSize.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_jpv0_case() {
-        let instruction = TestsErrorCollection::JpV0Case.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_jpv0_token() {
-        let instruction = TestsErrorCollection::JpV0Tokens.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_jpv0_addr_format() {
-        let instruction = TestsErrorCollection::JpV0AddressFormat.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_jpv0_addr_size() {
-        let instruction = TestsErrorCollection::JpV0AddressSize.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_ldi_case() {
-        let instruction = TestsErrorCollection::LdICase.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_ldi_token() {
-        let instruction = TestsErrorCollection::LdITokens.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_ldi_addr_format() {
-        let instruction = TestsErrorCollection::LdIAddressFormat.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_ldi_addr_size() {
-        let instruction = TestsErrorCollection::LdIAddressSize.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_ldvv_case() {
-        let instruction = TestsErrorCollection::LdVxVyCase.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
-    }
-    #[test]
-    fn error_ldvv_token() {
-        let instruction = TestsErrorCollection::LdVxVyTokens.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
+
+    fn error_test(str: &str) -> bool{
+        let teste: Vec<&str>= str.split_whitespace().collect();
+        parse_instruction(&*teste).is_err()
     }
 
     #[test]
-    fn error_ldvv_reg_name() {
-        let instruction = TestsErrorCollection::LdVxVyRegName.value();
-        let teste: Vec<&str>= instruction.split_whitespace().collect();
-        let result = parse_instruction(&*teste);
-        assert!(result.is_err());
+    fn cls_error() {
+        assert!(error_test(TestsErrorCollection::ClsCase.value()));
+        assert!(error_test(TestsErrorCollection::ClsTokens.value()));
+    }
+    #[test]
+    fn ret_error() {
+        assert!(error_test(TestsErrorCollection::RetCase.value()));
+        assert!(error_test(TestsErrorCollection::RetTokens.value()));
+    }
+    #[test]
+    fn jpaddr_error() {
+        assert!(error_test(TestsErrorCollection::JpAddrCase.value()));
+        assert!(error_test(TestsErrorCollection::JpAddrTokens.value()));
+        assert!(error_test(TestsErrorCollection::JpAddrAddressFormat.value()));
+        assert!(error_test(TestsErrorCollection::JpAddrAddressSize.value()));
+
+    }
+    #[test]
+    fn call_error() {
+        assert!(error_test(TestsErrorCollection::CallCase.value()));
+        assert!(error_test(TestsErrorCollection::CallTokens.value()));
+        assert!(error_test(TestsErrorCollection::CallAddressFormat.value()));
+        assert!(error_test(TestsErrorCollection::CallAddressSize.value()));
+    }
+    
+    #[test]
+    fn jpv0_error() {
+        assert!(error_test(TestsErrorCollection::JpV0Case.value()));
+        assert!(error_test(TestsErrorCollection::JpV0Tokens.value()));
+        assert!(error_test(TestsErrorCollection::JpV0AddressFormat.value()));
+        assert!(error_test(TestsErrorCollection::JpV0AddressSize.value()));
+    }
+    
+    #[test]
+    fn ldi_error() {
+        assert!(error_test(TestsErrorCollection::LdICase.value()));
+        assert!(error_test(TestsErrorCollection::LdITokens.value()));
+        assert!(error_test(TestsErrorCollection::LdIAddressFormat.value()));
+        assert!(error_test(TestsErrorCollection::LdIAddressSize.value()));
+    }
+    #[test]
+    fn ldvv_error() {
+        assert!(error_test(TestsErrorCollection::LdVxVyCase.value()));
+        assert!(error_test(TestsErrorCollection::LdVxVyTokens.value()));
+        assert!(error_test(TestsErrorCollection::LdVxVyRegName.value()));
     }
 }
