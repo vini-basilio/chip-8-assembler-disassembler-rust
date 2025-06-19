@@ -60,7 +60,6 @@ pub mod tests_errors {
 #[cfg(test)]
 pub mod tests_sucess {
     use crate::modules::instruction_parse::parse_instruction;
-    use crate::modules::tests::sucess_dataset::TestsSucess;
 
     fn sucess(str: &str) -> Result<(u8, u8), &str>{
         let teste: Vec<&str>= str.split_whitespace().collect();
@@ -69,15 +68,30 @@ pub mod tests_sucess {
 
     #[test]
     fn cls() {
-        assert_eq!(sucess(TestsSucess::Cls.value()).unwrap(), (0x00u8, 0xE0u8));
+        assert_eq!(sucess("CLS").unwrap(), (0x00u8, 0xE0u8));
     }
     #[test]
     fn ret() {
-        assert_eq!(sucess(TestsSucess::Ret.value()).unwrap(), (0x00u8, 0xEEu8));
+        assert_eq!(sucess("RET").unwrap(), (0x00u8, 0xEEu8));
     }
 
     #[test]
     fn jpone() {
-        assert_eq!(sucess(TestsSucess::JpOne.value()).unwrap(), (0x12u8, 0x00u8));
+        assert_eq!(sucess("JP 0x200").unwrap(), (0x12u8, 0x00u8));
+    }
+
+    #[test]
+    fn call() {
+        assert_eq!(sucess("CALL 0x200").unwrap(), (0x22u8, 0x00u8));
+    }
+
+    #[test]
+    fn jpb() {
+        assert_eq!(sucess("JP V0, 0x200").unwrap(), (0xB2u8, 0x00u8));
+    }
+
+    #[test]
+    fn ldi() {
+        assert_eq!(sucess("LD I, 0x200").unwrap(), (0xA2u8, 0x00u8));
     }
 }

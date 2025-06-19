@@ -27,12 +27,14 @@
   - ✅ Erro tokens
   - ✅ Erro formato do endereço
   - ✅ Erro limite do endereço
+  - ✅ Happy path
+  
 - [x] **Bnnn - JP V0, addr** 
   - ✅ Erro léxico
   - ✅ Erro tokens
   - ✅ Erro formato do endereço
   - ✅ Erro limite do endereço
-  
+  - ✅ Happy path
 
 ### Instruções com Três Tokens
 #### Valor Imediato
@@ -41,7 +43,9 @@
   - ✅ Erro tokens
   - ✅ Erro formato do endereço
   - ✅ Erro limite do endereço
-  
+  - ✅ Happy path  
+
+ 
 #### Lógicas e aritméticas 
 - [x] **8xy0 - LD Vx, Vy**
   - ✅ Erro léxico
