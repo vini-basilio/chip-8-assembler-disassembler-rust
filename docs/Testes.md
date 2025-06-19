@@ -8,7 +8,7 @@
     - ✅ Erro tokens
     - ✅ Happy path
   
-- [x] **00EE - RET **
+- [x] **00EE - RET**
     - ✅ Erro léxico
     - ✅ Erro tokens
     - ✅ Happy path
@@ -35,6 +35,15 @@
   - ✅ Erro formato do endereço
   - ✅ Erro limite do endereço
   - ✅ Happy path
+  
+- [x] **Ex9E - SKP Vx**
+  - ✅ Erro léxico
+  - ✅ Erro tokens
+  - ✅ Erro no nome do registrator
+  - ✅ Happy path
+
+- [x] ExA1 - SKNP Vx
+  - ✅ Happy path
 
 ### Instruções com Três Tokens
 #### Valor Imediato
@@ -45,7 +54,6 @@
   - ✅ Erro limite do endereço
   - ✅ Happy path  
 
- 
 #### Lógicas e aritméticas 
 - [x] **8xy0 - LD Vx, Vy**
   - ✅ Erro léxico
@@ -56,8 +64,6 @@
 
 ### Testes Pendentes
 #### Instruções que precisam ser testadas
-- [ ] Ex9E - SKP Vx
-- [ ] ExA1 - SKNP Vx
 - [ ] 3xkk - SE Vx, byte
 - [ ] 4xkk - SNE Vx, byte
 - [ ] 5xy0 - SE Vx, Vy

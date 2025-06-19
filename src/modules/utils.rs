@@ -75,8 +75,8 @@ pub fn valid_reg(reg: &str) -> Result<u16,  &'static str> {
 }
 
 pub fn handle_reg(s:&str, shift: i8, should_has_comma: bool) ->Result<u16,  &'static str> {
-    if s.ends_with(",")  == should_has_comma{
-        return Err("Esperava encontrar uma vírgula")
+    if should_has_comma && !s.ends_with(','){
+    return Err("Esperava encontrar uma vírgula")
     }
     let reg = valid_reg(s)?;
     Ok(reg << shift)

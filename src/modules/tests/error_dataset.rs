@@ -1,27 +1,37 @@
 pub enum TestsErrorCollection {
     ClsCase,
     ClsTokens,
+    
     RetCase,
     RetTokens,
+
     JpAddrCase,
     JpAddrTokens,
     JpAddrAddressFormat,
     JpAddrAddressSize,
+
     CallCase,
     CallTokens,
     CallAddressFormat,
     CallAddressSize,
+
     JpV0Case,
     JpV0Tokens,
     JpV0AddressFormat,
     JpV0AddressSize,
+
     LdICase,
     LdITokens,
     LdIAddressFormat,
     LdIAddressSize,
+
     LdVxVyCase,
     LdVxVyTokens,
     LdVxVyRegName,
+
+    SkpCase,
+    SkpTokens,
+    SkpRegName,
 }
 
 impl TestsErrorCollection {
@@ -56,6 +66,10 @@ impl TestsErrorCollection {
             TestsErrorCollection::LdVxVyCase => "LD V0 V1",
             TestsErrorCollection::LdVxVyTokens => "LD V1 V2 0x200",
             TestsErrorCollection::LdVxVyRegName => "LD V1, V17",
+
+            TestsErrorCollection::SkpCase => "SKp V0",
+            TestsErrorCollection::SkpTokens => "SKP V1 V2 0x200",
+            TestsErrorCollection::SkpRegName => "SKP V17",
         }
     }
 }
