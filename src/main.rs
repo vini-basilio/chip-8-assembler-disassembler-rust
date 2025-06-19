@@ -1,7 +1,6 @@
-mod patterns;
-mod instruction_parse;
+mod modules;
+mod parse_line_tests;
 
 fn main() {
     
 }
-
