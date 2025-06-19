@@ -74,7 +74,16 @@ fn valid_u12_address(address: &str) -> Result<u16,  &'static str> {
     match u16::from_str_radix(cleaned, 16) {
         Ok(n) if n <= 0x0FFF => Ok(n),
         Ok(_) => Err("Endereço de 12 bits maior que número máximo"),
-        Err(_e) => Err("Erro {} ao converter o endereço de 12 bit"),
+        Err(_e) => Err("Erro ao converter o endereço de 12 bit"),
+    }
+}
+
+fn valid_u8_address(address: &str) -> Result<u16,  &'static str> {
+    let cleaned = address.trim_start_matches("0x");
+    match u16::from_str_radix(cleaned, 16) {
+        Ok(n) if n <= 0x00FF => Ok(n),
+        Ok(_) => Err("Endereço de 8 bits maior que número máximo"),
+        Err(_e) => Err("Erro ao converter o endereço de 8 bit"),
     }
 }
 
@@ -87,28 +96,6 @@ fn valid_reg(reg: &str) -> Result<u16,  &'static str> {
     }
 }
 
-/// Processes a register string, validates it, and applies a left shift operation.
-///
-/// # Arguments
-/// * `s` - A string slice representing the register input.
-/// * `shift` - An 8-bit signed integer representing the number of bits to shift the register value to the left.
-///
-/// # Returns
-/// * `Ok(u16)` - The resulting 16-bit unsigned integer after the valid register value is shifted.
-/// * `Err(&'static str)` - Returns a static string slice error if the register string is invalid.
-///
-/// # Errors
-/// This function will return an error if:
-/// * The `s` input is not a valid register string as determined by the `valid_reg` function.
-///
-/// # Example
-/// ```
-/// let result = handle_reg("V1", 4);
-/// match result {
-///     Ok(value) => println!("Shifted value: {}", value),
-///     Err(err) => println!("Error: {}", err),
-/// }
-/// ```
 fn handle_reg(s:&str, shift: i8) ->Result<u16,  &'static str> {
     let reg = valid_reg(s)?;
      Ok(reg << shift)
@@ -138,7 +125,7 @@ fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Re
                     }
                     Err(error_msg)
                 },
-                "LD" if tokens[1] == "I" => {
+                "LD" if tokens[1] == "I," => {
                     let address = valid_u12_address(tokens[2])?;
                     Ok(convert_hexa_two_nibble(Opcode::LdI.value() | address))
                 },
@@ -234,17 +221,36 @@ fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Re
                     let reg = handle_reg(tokens[2], 8)?;
                     Ok(convert_hexa_two_nibble(Opcode::SetDt.value()  | reg ))
                 }
-                // "ST," => Ok(Opcode::SetSt),
-                // "F," => Ok(Opcode::SetI),
-                // "I," => Ok(Opcode::AddIReg),
-                // "B," => Ok(Opcode::StoreBcd),
-                // "[I]," => Ok(Opcode::StoreRegMemo),
+                "ST," => {
+                    let reg = handle_reg(tokens[2], 8)?;
+                    Ok(convert_hexa_two_nibble(Opcode::SetSt.value()  | reg ))
+                }
+                "F," => {
+                    let reg = handle_reg(tokens[2], 8)?;
+                    Ok(convert_hexa_two_nibble(Opcode::SetI.value()  | reg ))
+                }
+                "I," => {
+                    let reg = handle_reg(tokens[2], 8)?;
+                    Ok(convert_hexa_two_nibble(Opcode::AddIReg.value()  | reg ))
+                }
+                "B," => {
+                    let reg = handle_reg(tokens[2], 8)?;
+                    Ok(convert_hexa_two_nibble(Opcode::StoreBcd.value()  | reg ))
+                } ,
+                "[I]," => {
+                    let reg = handle_reg(tokens[2], 8)?;
+                    Ok(convert_hexa_two_nibble(Opcode::StoreRegMemo.value()  | reg ))
+                }
                 _ => Err(error_msg)
             }
         },
         InstructionKinds::LoadByte => {
             match tokens[0] {
-                // "SE" => Ok(Opcode::Se),
+                "SE" => {
+                    let addr = valid_u8_address(tokens[0]);
+                    let reg = handle_reg(tokens[2], 8)?;
+                    Ok(convert_hexa_two_nibble(Opcode::Se.value()  | reg ))
+                }
                 // "SNE" => Ok(Opcode::Sne),
                 // "RND" => Ok(Opcode::Rnd),
                 // "ADD" => Ok(Opcode::AddByte),

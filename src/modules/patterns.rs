@@ -1,4 +1,4 @@
-#[derive(Debug)]
+
 pub enum InstructionKinds {
     Simple,
     U12Address,
@@ -10,8 +10,6 @@ pub enum InstructionKinds {
     Draw,
 }
 
-
-#[derive(Debug, PartialEq)]
 pub enum Opcode {
     // Simples
     Cls,
