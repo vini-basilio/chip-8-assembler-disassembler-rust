@@ -14,7 +14,7 @@ pub fn parse_instruction(tokens: &[&str]) -> Result<(u8, u8), &'static str> {
 }
 fn instruction_type(tokens: &[&str]) -> Result<InstructionKinds, &'static str> {
     match tokens.len() {
-        1 =>  Ok(InstructionKinds::Simples),
+        1 =>  Ok(InstructionKinds::Simple),
         2 => two_token(tokens),
         3 => three_token(tokens),
         4 => four_token(tokens),
@@ -118,7 +118,7 @@ fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Re
     let error_msg = "A instrução possuí uma formatação conhecida, mas não um opcode conhecido";
     match instruction_kind {
        
-        InstructionKinds::Simples => {
+        InstructionKinds::Simple => {
             match tokens[0] {
                 "CLS" => Ok(convert_hexa_two_nibble(Opcode::Cls.value())),
                 "RET" => Ok(convert_hexa_two_nibble(Opcode::Ret.value())),

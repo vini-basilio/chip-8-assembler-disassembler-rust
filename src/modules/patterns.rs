@@ -1,6 +1,6 @@
 #[derive(Debug)]
 pub enum InstructionKinds {
-    Simples,
+    Simple,
     U12Address,
     LoadByte,
     Keyboard,
