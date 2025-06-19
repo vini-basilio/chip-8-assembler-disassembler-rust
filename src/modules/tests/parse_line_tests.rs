@@ -1,5 +1,5 @@
 #[cfg(test)]
-pub mod tests {
+pub mod tests_errors {
     use crate::modules::tests::error_dataset::TestsErrorCollection;
     use crate::modules::instruction_parse::parse_instruction;
 
@@ -53,5 +53,31 @@ pub mod tests {
         assert!(error_test(TestsErrorCollection::LdVxVyCase.value()));
         assert!(error_test(TestsErrorCollection::LdVxVyTokens.value()));
         assert!(error_test(TestsErrorCollection::LdVxVyRegName.value()));
+    }
+}
+
+
+#[cfg(test)]
+pub mod tests_sucess {
+    use crate::modules::instruction_parse::parse_instruction;
+    use crate::modules::tests::sucess_dataset::TestsSucess;
+
+    fn sucess(str: &str) -> Result<(u8, u8), &str>{
+        let teste: Vec<&str>= str.split_whitespace().collect();
+        parse_instruction(&*teste)
+    }
+
+    #[test]
+    fn cls() {
+        assert_eq!(sucess(TestsSucess::Cls.value()).unwrap(), (0x00u8, 0xE0u8));
+    }
+    #[test]
+    fn ret() {
+        assert_eq!(sucess(TestsSucess::Ret.value()).unwrap(), (0x00u8, 0xEEu8));
+    }
+
+    #[test]
+    fn jpone() {
+        assert_eq!(sucess(TestsSucess::JpOne.value()).unwrap(), (0x12u8, 0x00u8));
     }
 }

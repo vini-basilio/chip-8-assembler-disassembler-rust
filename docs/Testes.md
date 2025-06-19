@@ -6,10 +6,13 @@
 - [x] **00E0 - CLS**
     - ✅ Erro léxico
     - ✅ Erro tokens
+    - ✅ Happy path
+  
 - [x] **00EE - RET **
     - ✅ Erro léxico
     - ✅ Erro tokens
-
+    - ✅ Happy path
+  
 ### Instruções com Dois Tokens
 #### Valor Imediato
 - [x] **1nnn - JP addr**
@@ -17,6 +20,8 @@
   - ✅ Erro tokens
   - ✅ Erro formato do endereço
   - ✅ Erro limite do endereço
+  - ✅ Happy path
+
 - [x] **2nnn - CALL addr**
   - ✅ Erro léxico
   - ✅ Erro tokens

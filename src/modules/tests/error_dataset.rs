@@ -29,24 +29,30 @@ impl TestsErrorCollection {
         match self {
             TestsErrorCollection::ClsCase => "Cls",
             TestsErrorCollection::ClsTokens => "Cls I",
+            
             TestsErrorCollection::RetCase => "Ret",
             TestsErrorCollection::RetTokens => "RET vx",
+            
             TestsErrorCollection::JpAddrCase => "jp 0x200",
             TestsErrorCollection::JpAddrTokens => "JP 0x200 vx",
             TestsErrorCollection::JpAddrAddressFormat => "JP 200",
             TestsErrorCollection::JpAddrAddressSize => "JP 0x1200",
+            
             TestsErrorCollection::CallCase => "call 0x200",
             TestsErrorCollection::CallTokens => "CALL vx 0x200",
             TestsErrorCollection::CallAddressFormat => "CALL 200",
             TestsErrorCollection::CallAddressSize => "CALL 0x1200",
+            
             TestsErrorCollection::JpV0Case => "JP v0, 0x200",
             TestsErrorCollection::JpV0Tokens => "JP V0, 0x200 v",
             TestsErrorCollection::JpV0AddressFormat => "JP V0, 200",
             TestsErrorCollection::JpV0AddressSize => "JP V0, 0x1200",
+            
             TestsErrorCollection::LdICase => "LD i, 0x200",
             TestsErrorCollection::LdITokens => "LD I, 0x200 v",
             TestsErrorCollection::LdIAddressFormat => "LD I, 200",
             TestsErrorCollection::LdIAddressSize => "LD I, 0x1200",
+            
             TestsErrorCollection::LdVxVyCase => "LD V0 V1",
             TestsErrorCollection::LdVxVyTokens => "LD V1 V2 0x200",
             TestsErrorCollection::LdVxVyRegName => "LD V1, V17",

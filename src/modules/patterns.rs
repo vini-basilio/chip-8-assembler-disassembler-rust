@@ -7,6 +7,7 @@ pub enum InstructionKinds {
     FRegLabel,
     FLabelReg,
     Logical,
+    LogicalExceptions,
     Draw,
 }
 
@@ -28,7 +29,7 @@ pub enum Opcode {
     // Keyboard
     Skp,
     Sknp,
-    // LoadByte
+    // Logical
     SeRegReg,
     LdRegReg,
     Or,
@@ -38,6 +39,7 @@ pub enum Opcode {
     Sub,
     Shr,
     Subn,
+    // LogicalExceptions
     Shl,
     SneReg,
     // FRegLabel

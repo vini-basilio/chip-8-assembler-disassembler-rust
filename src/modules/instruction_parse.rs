@@ -24,10 +24,7 @@ fn instruction_type(tokens: &[&str]) -> Result<InstructionKinds, &'static str> {
     }
 }
 
-
-
 fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Result<(u8, u8),  &'static str>{
-    let error_msg = "A instrução possuí uma formatação conhecida, mas não um opcode conhecido";
     match instruction_kind {
         InstructionKinds::Simple => {
             let opcode = instruction_simple_opcode(&tokens[0])?;
@@ -42,7 +39,7 @@ fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Re
             match tokens[0] {
                 "SKP" => Ok(convert_hexa_two_nibble(Opcode::Skp.value() | reg)),
                 "SKNP" => Ok(convert_hexa_two_nibble(Opcode::Sknp.value()  | reg)),
-                _ => Err(error_msg),
+                _ => Err("OPCODE: a instrução 'keyboard', mas o opcode é desconhecido"),
             }
         },
         InstructionKinds::Logical => {
@@ -58,23 +55,20 @@ fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Re
             Ok(convert_hexa_two_nibble(opcode))
         },
         InstructionKinds::LoadByte => {
-            match tokens[0] {
-                "SE" => {
-                    let addr = valid_u8_address(tokens[0]);
-                    let reg = handle_reg(tokens[2], 8, true)?;
-                    Ok(convert_hexa_two_nibble(Opcode::Se.value()  | reg ))
-                }
-                // "SNE" => Ok(Opcode::Sne),
-                // "RND" => Ok(Opcode::Rnd),
-                // "ADD" => Ok(Opcode::AddByte),
-                // "LD" => Ok(Opcode::LdByte),
-                _ => Err(error_msg)
-            }
+            let opcode = instruction_loadbyte_opcode(tokens)?;
+            Ok(convert_hexa_two_nibble(opcode))
         },
+        InstructionKinds::LogicalExceptions => {
+            let regs = handle_reg(tokens[1], 8, false)? | handle_reg(tokens[3], 4, false)?;
+            match tokens[0] {
+                "SHR" => Ok(convert_hexa_two_nibble(Opcode::Shl.value() | regs)),
+                "SHL" => Ok(convert_hexa_two_nibble(Opcode::Shr.value()  | regs)),
+                _ => Err("OPCODE: a instrução 'logicalExpections', mas o opcode é desconhecido"),
+            }
+        }
         InstructionKinds::Draw => {
-            // if tokens[1].starts_with("V") &&  tokens[2].starts_with("V")
-            // { return Ok(Opcode::Draw); }
-            Err(error_msg)
+            let regs = handle_reg(tokens[1], 8, true)? | handle_reg(tokens[3], 4, true)?;
+            Ok(convert_hexa_two_nibble(Opcode::Draw.value() | regs))
         }
     }
 }

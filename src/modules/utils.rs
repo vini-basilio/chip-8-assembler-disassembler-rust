@@ -35,7 +35,7 @@ pub fn three_token(tokens: &[&str])-> Result<InstructionKinds,  &'static str>{
 }
 pub fn four_token(tokens: &[&str])-> Result<InstructionKinds,  &'static str>{
     match tokens[3] {
-        "SHR" | "SHL" if tokens[1].starts_with('V') => Ok(InstructionKinds::Logical),
+        "SHR" | "SHL" if tokens[1].starts_with('V') => Ok(InstructionKinds::LogicalExceptions),
         "DRW"  => Ok(InstructionKinds::Draw),
         _ => Err("Instrução de quatro tokens inválida"),
     }
@@ -127,8 +127,6 @@ pub fn instruction_logical_opcode(tokens: &[&str])  ->Result<u16, &'static str> 
         "SUB" => Ok(Opcode::Sub.value()  | regs ),
         "SUBN" => Ok(Opcode::Subn.value()  | regs ),
         "SNE" => Ok(Opcode::SneReg.value()  | regs ),
-        "SHR" => Ok(Opcode::Shr.value()  | regs ),
-        "SHL" => Ok(Opcode::Shl.value()  | regs ),
         _ =>  Err("OPCODE: a instrução 'logical', mas o opcode é desconhecido"),
     }
 }
@@ -153,5 +151,18 @@ pub fn instruction_flabelreg_opcode(tokens: &[&str])  ->Result<u16, &'static str
         "DT" => Ok(Opcode::DtReg.value()  | reg ),
         "K" => Ok(Opcode::WaitKey.value()  | reg ),
         _ =>  Err("OPCODE: a instrução 'flabelreg', mas o opcode é desconhecido"),
+    }
+}
+
+pub fn instruction_loadbyte_opcode(tokens: &[&str])  ->Result<u16, &'static str> {
+    let addr = valid_u8_address(tokens[0])?;
+    let reg = handle_reg(tokens[2], 8, true)?;
+    match tokens[0] {
+        "SE" => Ok(Opcode::Se.value()  | reg | addr),
+        "SNE" => Ok(Opcode::Sne.value()  | reg | addr),
+        "RND" => Ok(Opcode::Rnd.value()  | reg | addr),
+        "ADD" => Ok(Opcode::AddByte.value()  | reg | addr),
+        "LD" => Ok(Opcode::LdByte.value()  | reg | addr),
+        _ =>Err("OPCODE: a instrução 'loadbyte', mas o opcode é desconhecido"),
     }
 }
