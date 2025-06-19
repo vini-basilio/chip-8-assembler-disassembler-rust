@@ -71,8 +71,8 @@ impl Opcode {
             Opcode::Se => 0x3000,
             Opcode::Sne => 0x4000,
             Opcode::Rnd => 0xC000,
-            Opcode::AddByte => 0x6000,
-            Opcode::LdByte => 0x7000,
+            Opcode::AddByte => 0x7000,
+            Opcode::LdByte => 0x6000,
             // Keyboard
             Opcode::Skp => 0xE09E,
             Opcode::Sknp => 0xE0A1,

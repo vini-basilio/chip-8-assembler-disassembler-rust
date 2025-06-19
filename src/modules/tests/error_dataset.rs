@@ -1,7 +1,7 @@
 pub enum TestsErrorCollection {
     ClsCase,
     ClsTokens,
-    
+
     RetCase,
     RetTokens,
 
@@ -32,6 +32,11 @@ pub enum TestsErrorCollection {
     SkpCase,
     SkpTokens,
     SkpRegName,
+
+    SeByteCase,
+    SeByteTokens,
+    SeByteRegName,
+    SeByteAddressSize
 }
 
 impl TestsErrorCollection {
@@ -70,6 +75,11 @@ impl TestsErrorCollection {
             TestsErrorCollection::SkpCase => "SKp V0",
             TestsErrorCollection::SkpTokens => "SKP V1 V2 0x200",
             TestsErrorCollection::SkpRegName => "SKP V17",
+
+            TestsErrorCollection::SeByteCase => "Se V0, 0x200",
+            TestsErrorCollection::SeByteTokens => "Se V0, 0x200 asd",
+            TestsErrorCollection::SeByteRegName => "SKP V17, 0x001",
+            TestsErrorCollection::SeByteAddressSize => "SKP V1, 0x5000",
         }
     }
 }

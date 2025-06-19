@@ -155,8 +155,8 @@ pub fn instruction_flabelreg_opcode(tokens: &[&str])  ->Result<u16, &'static str
 }
 
 pub fn instruction_loadbyte_opcode(tokens: &[&str])  ->Result<u16, &'static str> {
-    let addr = valid_u8_address(tokens[0])?;
-    let reg = handle_reg(tokens[2], 8, true)?;
+    let addr = valid_u8_address(tokens[2])?;
+    let reg = handle_reg(tokens[1], 8, true)?;
     match tokens[0] {
         "SE" => Ok(Opcode::Se.value()  | reg | addr),
         "SNE" => Ok(Opcode::Sne.value()  | reg | addr),

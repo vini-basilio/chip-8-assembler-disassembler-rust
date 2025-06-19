@@ -42,7 +42,7 @@
   - ✅ Erro no nome do registrator
   - ✅ Happy path
 
-- [x] ExA1 - SKNP Vx
+- [x] **ExA1 - SKNP Vx**
   - ✅ Happy path
 
 ### Instruções com Três Tokens
@@ -55,28 +55,60 @@
   - ✅ Happy path  
 
 #### Lógicas e aritméticas 
+- [x] **5xy0 - SE Vx, Vy**
+  - ✅ Happy path
+
 - [x] **8xy0 - LD Vx, Vy**
   - ✅ Erro léxico
   - ✅ Erro tokens
   - ✅ Erro no nome do registrator
 
+- [x] **8xy1 - OR Vx, Vy**
+  - ✅ Happy path
+
+- [x] **8xy2 - AND Vx, Vy**
+  - ✅ Happy path
+
+- [x] **8xy3 - XOR Vx, Vy**
+  - ✅ Happy path
+
+- [x] **8xy4 - ADD Vx, Vy**
+  - ✅ Happy path
+
+- [x] **8xy5 - SUB Vx, Vy**
+  - ✅ Happy path
+
+- [x] **8xy7 - SUBN Vx, Vy**
+  - ✅ Happy path
+
+- [x] **9xy0 - SNE Vx, Vy**
+  - ✅ Happy path
+
+### Carregar um byte
+- [x] **3xkk - SE Vx, byte**
+  - ✅ Erro léxico
+  - ✅ Erro tokens
+  - ✅ Erro no nome do registrator
+  - ✅ Erro limite do endereço
+  - ✅ Happy path
+  
+- [x] **4xkk - SNE Vx, byte**
+  - ✅ Happy path
+
+- [x] **7xkk - ADD Vx, byte**
+  - ✅ Happy path
+
+- [x] **6xkk - LD Vx, byte**
+  - ✅ Happy path
+
+- [x] **Cxkk - RND Vx, byte**
+  - ✅ Happy path
+
+ 
 ### Instruções com Quatro Tokens
 
 ### Testes Pendentes
 #### Instruções que precisam ser testadas
-- [ ] 3xkk - SE Vx, byte
-- [ ] 4xkk - SNE Vx, byte
-- [ ] 5xy0 - SE Vx, Vy
-- [ ] 7xkk - ADD Vx, byte
-- [ ] 6xkk - LD Vx, byte
-- [ ] Cxkk - RND Vx, byte
-- [ ] 8xy1 - OR Vx, Vy
-- [ ] 8xy2 - AND Vx, Vy
-- [ ] 8xy3 - XOR Vx, Vy
-- [ ] 8xy4 - ADD Vx, Vy
-- [ ] 8xy5 - SUB Vx, Vy
-- [ ] 8xy7 - SUBN Vx, Vy
-- [ ] 9xy0 - SNE Vx, Vy
 - [ ] Fx07 - LD Vx, DT
 - [ ] Fx0A - LD Vx, K
 - [ ] Fx15 - LD DT, Vx

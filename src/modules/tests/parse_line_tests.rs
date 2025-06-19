@@ -61,6 +61,14 @@ pub mod tests_errors {
         assert!(error_test(TestsErrorCollection::SkpTokens.value()));
         assert!(error_test(TestsErrorCollection::SkpRegName.value()));
     }
+
+    #[test]
+    fn se_byte_error() {
+        assert!(error_test(TestsErrorCollection::SeByteCase.value()));
+        assert!(error_test(TestsErrorCollection::SeByteTokens.value()));
+        assert!(error_test(TestsErrorCollection::SeByteRegName.value()));
+        assert!(error_test(TestsErrorCollection::SeByteAddressSize.value()));
+    }
 }
 
 
@@ -89,10 +97,49 @@ pub mod tests_sucess {
 
     #[test]
     fn ldi() { assert_eq!(sucess("LD I, 0x200").unwrap(), (0xA2u8, 0x00u8)); }
-
     #[test]
     fn skp() { assert_eq!(sucess("SKP V2").unwrap(), (0xE2u8, 0x9Eu8)); }
 
     #[test]
     fn sknp() { assert_eq!(sucess("SKNP V2").unwrap(), (0xE2u8, 0xA1u8)); }
+
+    #[test]
+    fn sebyte() { assert_eq!(sucess("SE V1, 0x01").unwrap(), (0x31u8, 0x01u8)); }
+    #[test]
+    fn snebyte() { assert_eq!(sucess("SNE V1, 0x01").unwrap(), (0x41u8, 0x01u8)); }
+    #[test]
+    fn ldbyte() { assert_eq!(sucess("LD V1, 0x01").unwrap(), (0x61u8, 0x01u8)); }
+    #[test]
+    fn addbyte() { assert_eq!(sucess("ADD V1, 0x01").unwrap(), (0x71u8, 0x01u8)); }
+
+    #[test]
+    fn rndbyte() { assert_eq!(sucess("RND V1, 0x01").unwrap(), (0xC1u8, 0x01u8)); }
+
+    #[test]
+    fn sevv() { assert_eq!(sucess("SE V1, V2").unwrap(), (0x51u8, 0x20u8)); }
+
+    #[test]
+    fn ldvv() { assert_eq!(sucess("LD V1, V2").unwrap(), (0x81u8, 0x20u8)); }
+
+    #[test]
+    fn or() { assert_eq!(sucess("OR V1, V2").unwrap(), (0x81u8, 0x21u8)); }
+
+    #[test]
+    fn and() { assert_eq!(sucess("AND V1, V2").unwrap(), (0x81u8, 0x22u8)); }
+
+    #[test]
+    fn xor() { assert_eq!(sucess("XOR V1, V2").unwrap(), (0x81u8, 0x23u8)); }
+
+    #[test]
+    fn addvv() { assert_eq!(sucess("ADD V1, V2").unwrap(), (0x81u8, 0x24u8)); }
+
+    #[test]
+    fn sub() { assert_eq!(sucess("SUB V1, V2").unwrap(), (0x81u8, 0x25u8)); }
+
+    #[test]
+    fn subn() { assert_eq!(sucess("SUBN V1, V2").unwrap(), (0x81u8, 0x27u8)); }
+
+    #[test]
+    fn snevv() { assert_eq!(sucess("SNE V1, V2").unwrap(), (0x91u8, 0x20u8)); }
+
 }
