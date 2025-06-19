@@ -19,6 +19,9 @@ pub enum TestsErrorCollection {
     LdITokens,
     LdIAddressFormat,
     LdIAddressSize,
+    LdVxVyCase,
+    LdVxVyTokens,
+    LdVxVyRegName,
 }
 
 impl TestsErrorCollection {
@@ -44,6 +47,9 @@ impl TestsErrorCollection {
             TestsErrorCollection::LdITokens => "LD I, 0x200 v",
             TestsErrorCollection::LdIAddressFormat => "LD I, 200",
             TestsErrorCollection::LdIAddressSize => "LD I, 0x1200",
+            TestsErrorCollection::LdVxVyCase => "LD V0 V1",
+            TestsErrorCollection::LdVxVyTokens => "LD V1 V2 0x200",
+            TestsErrorCollection::LdVxVyRegName => "LD V1, V17",
         }
     }
 }

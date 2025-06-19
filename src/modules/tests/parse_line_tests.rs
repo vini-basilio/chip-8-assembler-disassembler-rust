@@ -142,4 +142,26 @@ pub mod tests {
         let result = parse_instruction(&*teste);
         assert!(result.is_err());
     }
+    #[test]
+    fn error_ldvv_case() {
+        let instruction = TestsErrorCollection::LdVxVyCase.value();
+        let teste: Vec<&str>= instruction.split_whitespace().collect();
+        let result = parse_instruction(&*teste);
+        assert!(result.is_err());
+    }
+    #[test]
+    fn error_ldvv_token() {
+        let instruction = TestsErrorCollection::LdVxVyTokens.value();
+        let teste: Vec<&str>= instruction.split_whitespace().collect();
+        let result = parse_instruction(&*teste);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn error_ldvv_reg_name() {
+        let instruction = TestsErrorCollection::LdVxVyRegName.value();
+        let teste: Vec<&str>= instruction.split_whitespace().collect();
+        let result = parse_instruction(&*teste);
+        assert!(result.is_err());
+    }
 }

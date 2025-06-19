@@ -30,7 +30,6 @@
   - ✅ Erro formato do endereço
   - ✅ Erro limite do endereço
   
-#### Registradores
 
 ### Instruções com Três Tokens
 #### Valor Imediato
@@ -39,6 +38,12 @@
   - ✅ Erro tokens
   - ✅ Erro formato do endereço
   - ✅ Erro limite do endereço
+  
+#### Lógicas e aritméticas 
+- [x] 8xy0 - LD Vx, Vy
+  - ✅ Erro léxico
+  - ✅ Erro tokens
+  - ✅ Erro no nome do registrator
 
 ### Instruções com Quatro Tokens
 
@@ -52,7 +57,6 @@
 - [ ] 7xkk - ADD Vx, byte
 - [ ] 6xkk - LD Vx, byte
 - [ ] Cxkk - RND Vx, byte
-- [ ] 8xy0 - LD Vx, Vy
 - [ ] 8xy1 - OR Vx, Vy
 - [ ] 8xy2 - AND Vx, Vy
 - [ ] 8xy3 - XOR Vx, Vy

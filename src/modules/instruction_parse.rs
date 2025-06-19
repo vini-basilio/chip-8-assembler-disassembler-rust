@@ -88,8 +88,12 @@ fn valid_u8_address(address: &str) -> Result<u16,  &'static str> {
 }
 
 fn valid_reg(reg: &str) -> Result<u16,  &'static str> {
-    let cleaned = reg.trim_start_matches("V");
-    match u16::from_str_radix(cleaned, 16) {
+    if !reg.ends_with(",") {
+       return Err("Esperava encontrar uma vírgula")
+    }
+
+    let cleaned = reg.replace(&[',', 'V'], &"");
+    match u16::from_str_radix(&cleaned, 16) {
         Ok(n) if n <= 0x000F => Ok(n),
         Ok(_) => Err("Registrador não encontrado"),
         Err(_e) => Err("Erro ao converter o registrador"),
