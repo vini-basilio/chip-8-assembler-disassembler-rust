@@ -59,12 +59,17 @@ fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Re
             Ok(convert_hexa_two_nibble(opcode))
         },
         InstructionKinds::LogicalExceptions => {
-            let regs = handle_reg(tokens[1], 8, false)? | handle_reg(tokens[3], 4, false)?;
-            match tokens[0] {
-                "SHR" => Ok(convert_hexa_two_nibble(Opcode::Shl.value() | regs)),
-                "SHL" => Ok(convert_hexa_two_nibble(Opcode::Shr.value()  | regs)),
-                _ => Err("OPCODE: a instrução 'logicalExpections', mas o opcode é desconhecido"),
+            if tokens[1].starts_with("V") && tokens[2] == "{," && tokens[3].starts_with("V") {
+                let regs = handle_reg(tokens[1], 8, false)?
+                    | handle_reg(tokens[3], 4, false)?;
+
+                return match tokens[0] {
+                    "SHR" => Ok(convert_hexa_two_nibble(Opcode::Shr.value() | regs)),
+                    "SHL" => Ok(convert_hexa_two_nibble(Opcode::Shl.value()  | regs)),
+                    _ => Err("OPCODE: a instrução 'logicalExpections', mas o opcode é desconhecido"),
+                }
             }
+            Err("OPCODE: a instrução 'logicalExpections', mas o opcode é desconhecido")
         }
         InstructionKinds::Draw => {
             let regs = handle_reg(tokens[1], 8, true)? | handle_reg(tokens[3], 4, true)?;

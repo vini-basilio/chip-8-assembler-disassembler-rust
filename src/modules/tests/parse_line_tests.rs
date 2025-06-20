@@ -179,4 +179,10 @@ pub mod tests_sucess {
 
     #[test]
     fn f_ld_i_vx() { assert_eq!(sucess("LD [I], VD").unwrap(), (0xFDu8, 0x55u8)); }
+
+    #[test]
+    fn shr_vx_vy() { assert_eq!(sucess("SHR V0 {, V1}").unwrap(), (0x80u8, 0x16u8)); }
+
+    #[test]
+    fn shl_vx_vy() { assert_eq!(sucess("SHL V0 {, V1}").unwrap(), (0x80u8, 0x1Eu8)); }
 }

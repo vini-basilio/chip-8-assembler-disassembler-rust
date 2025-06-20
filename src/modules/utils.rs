@@ -34,7 +34,7 @@ pub fn three_token(tokens: &[&str])-> Result<InstructionKinds,  &'static str>{
     }
 }
 pub fn four_token(tokens: &[&str])-> Result<InstructionKinds,  &'static str>{
-    match tokens[3] {
+    match tokens[0] {
         "SHR" | "SHL" if tokens[1].starts_with('V') => Ok(InstructionKinds::LogicalExceptions),
         "DRW"  => Ok(InstructionKinds::Draw),
         _ => Err("Instrução de quatro tokens inválida"),
@@ -66,7 +66,7 @@ pub fn valid_u8_address(address: &str) -> Result<u16,  &'static str> {
 }
 
 pub fn valid_reg(reg: &str) -> Result<u16,  &'static str> {
-    let cleaned = reg.replace(&[',', 'V'], &"");
+    let cleaned = reg.replace(&[',', 'V', '}'], &"");
     match u16::from_str_radix(&cleaned, 16) {
         Ok(n) if n <= 0x000F => Ok(n),
         Ok(_) => Err("Registrador não encontrado"),
