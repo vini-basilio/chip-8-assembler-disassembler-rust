@@ -72,8 +72,11 @@ fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Re
             Err("OPCODE: a instrução 'logicalExpections', mas o opcode é desconhecido")
         }
         InstructionKinds::Draw => {
-            let regs = handle_reg(tokens[1], 8, true)? | handle_reg(tokens[3], 4, true)?;
-            Ok(convert_hexa_two_nibble(Opcode::Draw.value() | regs))
+            let regs = handle_reg(tokens[1], 8, true)? | 
+                handle_reg(tokens[2], 4, true)?;
+            
+            let addr = valid_u8_address(tokens[3])?;
+            Ok(convert_hexa_two_nibble(Opcode::Draw.value() | regs | addr))
         }
     }
 }

@@ -185,4 +185,11 @@ pub mod tests_sucess {
 
     #[test]
     fn shl_vx_vy() { assert_eq!(sucess("SHL V0 {, V1}").unwrap(), (0x80u8, 0x1Eu8)); }
+
+    #[test]
+    fn drw() {
+        let result = sucess("DRW V0, V1, 0x2").unwrap();
+        println!("{:?}", result);
+        assert_eq!(result, (0xD0u8, 0x12u8));
+    }
 }
