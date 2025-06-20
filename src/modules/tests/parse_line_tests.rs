@@ -189,7 +189,6 @@ pub mod tests_sucess {
     #[test]
     fn drw() {
         let result = sucess("DRW V0, V1, 0x2").unwrap();
-        println!("{:?}", result);
         assert_eq!(result, (0xD0u8, 0x12u8));
     }
 }

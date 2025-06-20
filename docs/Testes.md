@@ -139,13 +139,15 @@
   - ✅ Happy path
 
 ### Instruções com Quatro Tokens
+- [x] 8xy6 - SHR Vx {, Vy}
+  - ✅ Happy path
+- [x] 8xyE - SHL Vx {, Vy}
+  - ✅ Happy path
+- [x] Dxyn - DRW Vx, Vy, nibble
+  - ✅ Happy path
 
 ### Testes Pendentes
 #### Instruções que precisam ser testadas
-
-- [ ] 8xy6 - SHR Vx {, Vy}
-- [ ] 8xyE - SHL Vx {, Vy}
-- [ ] Dxyn - DRW Vx, Vy, nibble
 
 ## Legenda
 - ✅ Teste implementado
