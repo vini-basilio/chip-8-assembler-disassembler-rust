@@ -69,6 +69,20 @@ pub mod tests_errors {
         assert!(error_test(TestsErrorCollection::SeByteRegName.value()));
         assert!(error_test(TestsErrorCollection::SeByteAddressSize.value()));
     }
+
+    #[test]
+    fn f_reg_label_error() {
+        assert!(error_test(TestsErrorCollection::FRegLabelCase.value()));
+        assert!(error_test(TestsErrorCollection::FRegLabelTokens.value()));
+        assert!(error_test(TestsErrorCollection::FRegLabelRegName.value()));
+    }
+
+    #[test]
+    fn f_label_reg_error() {
+        assert!(error_test(TestsErrorCollection::FLabelRegCase.value()));
+        assert!(error_test(TestsErrorCollection::FLabelRegTokens.value()));
+        assert!(error_test(TestsErrorCollection::FLabelRegRegName.value()));
+    }
 }
 
 
@@ -140,6 +154,29 @@ pub mod tests_sucess {
     fn subn() { assert_eq!(sucess("SUBN V1, V2").unwrap(), (0x81u8, 0x27u8)); }
 
     #[test]
-    fn snevv() { assert_eq!(sucess("SNE V1, V2").unwrap(), (0x91u8, 0x20u8)); }
+    fn snevv() { assert_eq!(sucess("SNE VF, V2").unwrap(), (0x9Fu8, 0x20u8)); }
 
+    #[test]
+    fn f_ld_reg_dt() { assert_eq!(sucess("LD V6, DT").unwrap(), (0xF6u8, 0x07u8)); }
+
+    #[test]
+    fn f_ld_reg_k() { assert_eq!(sucess("LD V6, K").unwrap(), (0xF6u8, 0x0Au8)); }
+
+    #[test]
+    fn f_ld_reg_i() { assert_eq!(sucess("LD VB, [I]").unwrap(), (0xFBu8, 0x65u8)); }
+
+    #[test]
+    fn f_ld_dt_vx() { assert_eq!(sucess("LD DT, VA").unwrap(), (0xFAu8, 0x15u8)); }
+
+    #[test]
+    fn f_ld_f_vx() { assert_eq!(sucess("LD F, VD").unwrap(), (0xFDu8, 0x29u8)); }
+
+    #[test]
+    fn f_add_i_vx() { assert_eq!(sucess("ADD I, VD").unwrap(), (0xFDu8, 0x1Eu8)); }
+
+    #[test]
+    fn f_ld_b_vx() { assert_eq!(sucess("LD B, VD").unwrap(), (0xFDu8, 0x33u8)); }
+
+    #[test]
+    fn f_ld_i_vx() { assert_eq!(sucess("LD [I], VD").unwrap(), (0xFDu8, 0x55u8)); }
 }

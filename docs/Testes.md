@@ -36,6 +36,7 @@
   - ✅ Erro limite do endereço
   - ✅ Happy path
   
+#### Teclado
 - [x] **Ex9E - SKP Vx**
   - ✅ Erro léxico
   - ✅ Erro tokens
@@ -103,21 +104,45 @@
 
 - [x] **Cxkk - RND Vx, byte**
   - ✅ Happy path
-
+### Temporizadores
+- [x] **Fx07 - LD Vx, DT**
+  - ✅ Erro léxico
+  - ✅ Erro tokens
+  - ✅ Erro no nome do registrator
+  - ✅ Happy path
  
+- [x] **Fx0A - LD Vx, K**
+  - ✅ Happy path
+
+- [x] **Fx65 - LD Vx, [I]**
+  - ✅ Happy path
+
+- [x] **Fx15 - LD DT, Vx**
+  - ✅ Erro léxico
+  - ✅ Erro tokens
+  - ✅ Erro no nome do registrator
+  - ✅ Happy path
+
+- [x] **Fx18 - LD ST, Vx**
+  - ✅ Happy path
+
+- [x] **Fx29 - LD F, Vx**
+  - ✅ Happy path
+
+- [x] **Fx1E - ADD I, Vx**
+  - ✅ Happy path
+
+- [x] **Fx33 - LD B, Vx**
+  - ✅ Happy path
+
+- [x] Fx55 - LD [I], Vx
+  - ✅ Happy path
+
 ### Instruções com Quatro Tokens
 
 ### Testes Pendentes
 #### Instruções que precisam ser testadas
-- [ ] Fx07 - LD Vx, DT
-- [ ] Fx0A - LD Vx, K
-- [ ] Fx15 - LD DT, Vx
-- [ ] Fx18 - LD ST, Vx
-- [ ] Fx29 - LD F, Vx
-- [ ] Fx1E - ADD I, Vx
-- [ ] Fx33 - LD B, Vx
-- [ ] Fx55 - LD [I], Vx
-- [ ] Fx65 - LD Vx, [I]
+
 - [ ] 8xy6 - SHR Vx {, Vy}
 - [ ] 8xyE - SHL Vx {, Vy}
 - [ ] Dxyn - DRW Vx, Vy, nibble

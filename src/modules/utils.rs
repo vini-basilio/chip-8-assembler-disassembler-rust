@@ -91,26 +91,39 @@ pub fn instruction_simple_opcode(name :&str)  ->Result<u16, &'static str> {
 }
 
 pub fn instruction_u12addr_opcode(tokens: &[&str])  ->Result<u16, &'static str> {
-    match tokens[0] {
-        "JP" => {
-            if tokens[1] == "V0," {
-                let addr_token_two = valid_u12_address(tokens[2])?;
-                return Ok(Opcode::JpB.value() | addr_token_two);
+    match tokens.len() {
+        2 => {
+            if !tokens[1].starts_with("0x") {
+                return Err("OPCODE: a instrução 'u12addr', mas o opcode é desconhecido")
             }
-            if tokens[1].starts_with("0x") {
-                let addr_token_one = valid_u12_address(tokens[1])?;
-                return Ok(Opcode::JpOne.value() | addr_token_one);
+            match tokens[0] {
+                "JP" => {
+                    let addr_token_one = valid_u12_address(tokens[1])?;
+                     Ok(Opcode::JpOne.value() | addr_token_one)
+                }
+                "CALL" => {
+                    let addr_token_one = valid_u12_address(tokens[1])?;
+                    Ok(Opcode::Call.value() | addr_token_one)
+                }
+                _ => Err("OPCODE: a instrução 'u12addr', mas o opcode é desconhecido"),
             }
-            Err("OPCODE: a instrução 'u12addr', mas o opcode é desconhecido")
-        },
-        "LD" if tokens[1] == "I," => {
-            let addr_token_two = valid_u12_address(tokens[2])?;
-            Ok(Opcode::LdI.value() | addr_token_two)
-        },
-        "CALL" if tokens[1].starts_with("0x") => {
-            let addr_token_one = valid_u12_address(tokens[1])?;
-            Ok(Opcode::Call.value() | addr_token_one)
-        },
+        }
+        3 => {
+            if !tokens[2].starts_with("0x") {
+                return Err("OPCODE: a instrução 'u12addr', mas o opcode é desconhecido")
+            }
+            match tokens[0] {
+                "LD" if tokens[1] == "I," => {
+                    let addr_token_one = valid_u12_address(tokens[2])?;
+                    Ok(Opcode::LdI.value() | addr_token_one)
+                }
+                "JP" if tokens[1] == "V0," => {
+                    let addr_token_one = valid_u12_address(tokens[2])?;
+                    Ok(Opcode::JpB.value() | addr_token_one)
+                }
+                _ => Err("OPCODE: a instrução 'u12addr', mas o opcode é desconhecido"),
+            }
+        }
         _ => Err("OPCODE: a instrução 'u12addr', mas o opcode é desconhecido"),
     }
 }
@@ -133,14 +146,14 @@ pub fn instruction_logical_opcode(tokens: &[&str])  ->Result<u16, &'static str> 
 
 pub fn instruction_freglabel_opcode(tokens: &[&str])  ->Result<u16, &'static str> {
     let reg = handle_reg(tokens[2], 8, false)?;
-    match tokens[1] {
-        "DT," =>  Ok(Opcode::SetDt.value()  | reg ),
-        "ST," => Ok(Opcode::SetSt.value()  | reg ),
-        "F," => Ok(Opcode::SetI.value()  | reg ),
-        "I," => Ok(Opcode::AddIReg.value()  | reg ),
-        "B," => Ok(Opcode::StoreBcd.value()  | reg ),
-        "[I]," => Ok(Opcode::StoreRegMemo.value()  | reg ),
-        _ =>  Err("OPCODE: a instrução 'freglabel', mas o opcode é desconhecido"),
+    match (tokens[0], tokens[1]) {
+            ("ADD", "I,") =>  Ok(Opcode::AddIReg.value()  | reg ),
+            ("LD","DT,") =>  Ok(Opcode::SetDt.value()  | reg ),
+            ("LD","ST,") => Ok(Opcode::SetSt.value()  | reg ),
+            ("LD","F,") => Ok(Opcode::SetSprite.value()  | reg ),
+            ("LD","B,") => Ok(Opcode::StoreBcd.value()  | reg ),
+            ("LD","[I],") => Ok(Opcode::StoreRegMemo.value()  | reg ),
+            _ =>  Err("OPCODE: a instrução 'freglabel', mas o opcode é desconhecido"),
     }
 }
 

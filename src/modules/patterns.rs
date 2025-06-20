@@ -49,7 +49,7 @@ pub enum Opcode {
     // FLabelReg
     SetDt,
     SetSt,
-    SetI,
+    SetSprite,
     AddIReg,
     StoreBcd,
     StoreRegMemo,
@@ -95,8 +95,8 @@ impl Opcode {
             // FLabelReg
             Opcode::SetDt => 0xF015,
             Opcode::SetSt => 0xF018,
-            Opcode::SetI => 0xF01E,
-            Opcode::AddIReg => 0xF029,
+            Opcode::AddIReg => 0xF01E,
+            Opcode::SetSprite => 0xF029,
             Opcode::StoreBcd => 0xF033,
             Opcode::StoreRegMemo => 0xF055,
             Opcode::Draw => 0xD000,

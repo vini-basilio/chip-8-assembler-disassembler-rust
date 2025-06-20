@@ -36,7 +36,15 @@ pub enum TestsErrorCollection {
     SeByteCase,
     SeByteTokens,
     SeByteRegName,
-    SeByteAddressSize
+    SeByteAddressSize,
+
+    FRegLabelCase,
+    FRegLabelTokens,
+    FRegLabelRegName,
+
+    FLabelRegCase,
+    FLabelRegTokens,
+    FLabelRegRegName,
 }
 
 impl TestsErrorCollection {
@@ -80,6 +88,14 @@ impl TestsErrorCollection {
             TestsErrorCollection::SeByteTokens => "Se V0, 0x200 asd",
             TestsErrorCollection::SeByteRegName => "SKP V17, 0x001",
             TestsErrorCollection::SeByteAddressSize => "SKP V1, 0x5000",
+
+            TestsErrorCollection::FRegLabelCase => "LD v0, DT",
+            TestsErrorCollection::FRegLabelTokens => "SKP V1 DT",
+            TestsErrorCollection::FRegLabelRegName => "SKP V17, DT",
+
+            TestsErrorCollection::FLabelRegCase => "LD Dt, V9",
+            TestsErrorCollection::FLabelRegTokens => "LD DT V9",
+            TestsErrorCollection::FLabelRegRegName => "LD DT V16",
         }
     }
 }
