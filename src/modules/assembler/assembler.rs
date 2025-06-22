@@ -1,8 +1,7 @@
 use std::fs::File;
 use std::io::Write;
-use std::path::{Path, PathBuf};
 use std::process::exit;
-use crate::modules::instruction_parse::parse_instruction;
+use crate::modules::assembler::instruction_parse::parse_instruction;
 
 pub fn assembler(contents: String, output_addr: String)  {
     let mut machine_code: Vec<u8> = Vec::new();

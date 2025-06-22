@@ -1,4 +1,4 @@
-use crate::modules::patterns::{InstructionKinds, Opcode};
+use crate::modules::assembler::patterns::{InstructionKinds, Opcode};
 
 pub fn two_token(tokens: &[&str]) -> Result<InstructionKinds,  &'static str>{
     match tokens[0] {

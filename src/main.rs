@@ -1,7 +1,6 @@
 use std::fs;
-use std::path::PathBuf;
 use clap::{Parser, Subcommand};
-use crate::modules::assembler::assembler;
+use crate::modules::assembler::assembler::assembler;
 
 mod modules;
 
@@ -55,7 +54,7 @@ fn main() {
         }
         Commands::Disassembler { input, output } => {
             println!("Dissassemblando: {:?} -> {:?}", input, output);
-            // chama tua lógica de disassembler aqui
+
         }
     }
 }

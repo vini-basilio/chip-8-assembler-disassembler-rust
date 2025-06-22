@@ -1,5 +1,5 @@
-use crate::modules::patterns::{InstructionKinds, Opcode};
-use crate::modules::utils::*;
+use crate::modules::assembler::patterns::{InstructionKinds, Opcode};
+use crate::modules::assembler::utils::*;
 
 /// Analisa uma instrução CHIP-8 e retorna seu opcode correspondente
 ///
@@ -92,7 +92,7 @@ fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Re
 
 #[cfg(test)]
 pub mod tests_errors {
-    use crate::modules::instruction_parse::parse_instruction;
+    use crate::modules::assembler::instruction_parse::parse_instruction;
 
     fn error_test(str: &str) -> bool{
         let teste: Vec<&str>= str.split_whitespace().collect();
@@ -179,7 +179,7 @@ pub mod tests_errors {
 
 #[cfg(test)]
 pub mod tests_sucess {
-    use crate::modules::instruction_parse::parse_instruction;
+    use crate::modules::assembler::instruction_parse::parse_instruction;
 
     fn sucess(str: &str) -> Result<(u8, u8), &str>{
         let teste: Vec<&str>= str.split_whitespace().collect();
