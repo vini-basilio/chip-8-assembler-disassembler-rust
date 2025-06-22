@@ -1,3 +1,4 @@
 
 pub mod assembler;
-mod disassembler;
+pub mod disassembler;
+mod patterns;

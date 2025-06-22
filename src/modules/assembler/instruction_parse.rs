@@ -1,5 +1,6 @@
-use crate::modules::assembler::patterns::{InstructionKinds, Opcode};
+use crate::modules::patterns::{InstructionKinds};
 use crate::modules::assembler::utils::*;
+use crate::opcodes;
 
 /// Analisa uma instrução CHIP-8 e retorna seu opcode correspondente
 ///
@@ -44,8 +45,8 @@ fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Re
         InstructionKinds::Keyboard => {
             let reg = handle_reg(tokens[1], 8, false)?;
             match tokens[0] {
-                "SKP" => Ok(convert_hexa_two_nibble(Opcode::Skp.value() | reg)),
-                "SKNP" => Ok(convert_hexa_two_nibble(Opcode::Sknp.value()  | reg)),
+                "SKP" =>  Ok(convert_hexa_two_nibble(opcodes!(SKP)  | reg)),
+                "SKNP" => Ok(convert_hexa_two_nibble(opcodes!(SKNP) | reg)),
                 _ => Err("OPCODE: a instrução 'keyboard', mas o opcode é desconhecido"),
             }
         },
@@ -71,8 +72,8 @@ fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Re
                     | handle_reg(tokens[3], 4, false)?;
 
                 return match tokens[0] {
-                    "SHR" => Ok(convert_hexa_two_nibble(Opcode::Shr.value() | regs)),
-                    "SHL" => Ok(convert_hexa_two_nibble(Opcode::Shl.value()  | regs)),
+                    "SHR" => Ok(convert_hexa_two_nibble(opcodes!(SHR) | regs)),
+                    "SHL" => Ok(convert_hexa_two_nibble(opcodes!(SHL) | regs)),
                     _ => Err("OPCODE: a instrução 'logicalExpections', mas o opcode é desconhecido"),
                 }
             }
@@ -83,7 +84,7 @@ fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Re
                 handle_reg(tokens[2], 4, true)?;
             
             let addr = valid_u8_address(tokens[3])?;
-            Ok(convert_hexa_two_nibble(Opcode::Draw.value() | regs | addr))
+            Ok(convert_hexa_two_nibble(opcodes!(DRAW) | regs | addr))
         }
     }
 }

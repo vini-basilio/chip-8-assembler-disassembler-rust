@@ -8,7 +8,7 @@ mod modules;
 #[command(
     version,
     about = "CLI para assembler e disassembler de ROMs CHIP-8",
-    author = "vinicius basilio"
+    author = "Vinicius B."
 )]
 
 struct Cli {

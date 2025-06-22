@@ -1,4 +1,5 @@
-use crate::modules::assembler::patterns::{InstructionKinds, Opcode};
+use crate::modules::patterns::{InstructionKinds};
+use crate::opcodes;
 
 pub fn two_token(tokens: &[&str]) -> Result<InstructionKinds,  &'static str>{
     match tokens[0] {
@@ -84,8 +85,8 @@ pub fn handle_reg(s:&str, shift: i8, should_has_comma: bool) ->Result<u16,  &'st
 
 pub fn instruction_simple_opcode(name :&str)  ->Result<u16, &'static str> {
     match name {
-        "CLS" => Ok(Opcode::Cls.value()),
-        "RET" => Ok(Opcode::Ret.value()),
+        "CLS" => Ok(opcodes!(CLS)),
+        "RET" => Ok(opcodes!(RET)),
         _ => Err("OPCODE: a instrução 'simple', mas o opcode é desconhecido"),
     }
 }
@@ -99,11 +100,11 @@ pub fn instruction_u12addr_opcode(tokens: &[&str])  ->Result<u16, &'static str> 
             match tokens[0] {
                 "JP" => {
                     let addr_token_one = valid_u12_address(tokens[1])?;
-                     Ok(Opcode::JpOne.value() | addr_token_one)
+                     Ok(opcodes!(JP_ONE) | addr_token_one)
                 }
                 "CALL" => {
                     let addr_token_one = valid_u12_address(tokens[1])?;
-                    Ok(Opcode::Call.value() | addr_token_one)
+                    Ok(opcodes!(CALL) | addr_token_one)
                 }
                 _ => Err("OPCODE: a instrução 'u12addr', mas o opcode é desconhecido"),
             }
@@ -115,11 +116,11 @@ pub fn instruction_u12addr_opcode(tokens: &[&str])  ->Result<u16, &'static str> 
             match tokens[0] {
                 "LD" if tokens[1] == "I," => {
                     let addr_token_one = valid_u12_address(tokens[2])?;
-                    Ok(Opcode::LdI.value() | addr_token_one)
+                    Ok(opcodes!(LD_I) | addr_token_one)
                 }
                 "JP" if tokens[1] == "V0," => {
                     let addr_token_one = valid_u12_address(tokens[2])?;
-                    Ok(Opcode::JpB.value() | addr_token_one)
+                    Ok(opcodes!(JP_B) | addr_token_one)
                 }
                 _ => Err("OPCODE: a instrução 'u12addr', mas o opcode é desconhecido"),
             }
@@ -131,15 +132,15 @@ pub fn instruction_u12addr_opcode(tokens: &[&str])  ->Result<u16, &'static str> 
 pub fn instruction_logical_opcode(tokens: &[&str])  ->Result<u16, &'static str> {
     let regs = handle_reg(tokens[1], 8, true)? | handle_reg(tokens[2], 4, false)?;
     match tokens[0] {
-        "SE" => Ok(Opcode::SeRegReg.value()  | regs ),
-        "LD" => Ok(Opcode::LdRegReg.value()  | regs ),
-        "OR" => Ok(Opcode::Or.value()  | regs ),
-        "AND" => Ok(Opcode::And.value()  | regs ),
-        "XOR" => Ok(Opcode::Xor.value()  | regs ),
-        "ADD" => Ok(Opcode::AddRegReg.value()  | regs ),
-        "SUB" => Ok(Opcode::Sub.value()  | regs ),
-        "SUBN" => Ok(Opcode::Subn.value()  | regs ),
-        "SNE" => Ok(Opcode::SneReg.value()  | regs ),
+        "SE" => Ok(opcodes!(SE_REG_REG)   | regs ),
+        "LD" => Ok(opcodes!(LD_REG_REG)   | regs ),
+        "OR" => Ok(opcodes!(OR)           | regs ),
+        "AND" => Ok(opcodes!(AND)         | regs ),
+        "XOR" => Ok(opcodes!(XOR)         | regs ),
+        "ADD" => Ok(opcodes!(ADD_REG_REG) | regs ),
+        "SUB" => Ok(opcodes!(SUB)         | regs ),
+        "SUBN" => Ok(opcodes!(SUBN)       | regs ),
+        "SNE" => Ok(opcodes!(SNE_REG)     | regs ),
         _ =>  Err("OPCODE: a instrução 'logical', mas o opcode é desconhecido"),
     }
 }
@@ -147,12 +148,12 @@ pub fn instruction_logical_opcode(tokens: &[&str])  ->Result<u16, &'static str> 
 pub fn instruction_freglabel_opcode(tokens: &[&str])  ->Result<u16, &'static str> {
     let reg = handle_reg(tokens[2], 8, false)?;
     match (tokens[0], tokens[1]) {
-            ("ADD", "I,") =>  Ok(Opcode::AddIReg.value()  | reg ),
-            ("LD","DT,") =>  Ok(Opcode::SetDt.value()  | reg ),
-            ("LD","ST,") => Ok(Opcode::SetSt.value()  | reg ),
-            ("LD","F,") => Ok(Opcode::SetSprite.value()  | reg ),
-            ("LD","B,") => Ok(Opcode::StoreBcd.value()  | reg ),
-            ("LD","[I],") => Ok(Opcode::StoreRegMemo.value()  | reg ),
+            ("ADD", "I,") => Ok(opcodes!(ADD_I_REG)      | reg ),
+            ("LD","DT,") =>  Ok(opcodes!(SET_DT)         | reg ),
+            ("LD","ST,") =>  Ok(opcodes!(SET_ST)         | reg ),
+            ("LD","F,") =>   Ok(opcodes!(SET_SPRITE)     | reg ),
+            ("LD","B,") =>   Ok(opcodes!(STORE_BCD)      | reg ),
+            ("LD","[I],") => Ok(opcodes!(STORE_REG_MEMO) | reg ),
             _ =>  Err("OPCODE: a instrução 'freglabel', mas o opcode é desconhecido"),
     }
 }
@@ -160,9 +161,9 @@ pub fn instruction_freglabel_opcode(tokens: &[&str])  ->Result<u16, &'static str
 pub fn instruction_flabelreg_opcode(tokens: &[&str])  ->Result<u16, &'static str> {
     let reg = handle_reg(tokens[1], 8, true)?;
     match tokens[2] {
-        "[I]" => Ok(Opcode::RegFromMemo.value()  | reg ),
-        "DT" => Ok(Opcode::DtReg.value()  | reg ),
-        "K" => Ok(Opcode::WaitKey.value()  | reg ),
+        "[I]" => Ok(opcodes!(REG_FROM_MEMO) | reg ),
+        "DT" =>  Ok(opcodes!(DT_REG)        | reg ),
+        "K" =>   Ok(opcodes!(WAIT_KEY)      | reg ),
         _ =>  Err("OPCODE: a instrução 'flabelreg', mas o opcode é desconhecido"),
     }
 }
@@ -171,11 +172,11 @@ pub fn instruction_loadbyte_opcode(tokens: &[&str])  ->Result<u16, &'static str>
     let addr = valid_u8_address(tokens[2])?;
     let reg = handle_reg(tokens[1], 8, true)?;
     match tokens[0] {
-        "SE" => Ok(Opcode::Se.value()  | reg | addr),
-        "SNE" => Ok(Opcode::Sne.value()  | reg | addr),
-        "RND" => Ok(Opcode::Rnd.value()  | reg | addr),
-        "ADD" => Ok(Opcode::AddByte.value()  | reg | addr),
-        "LD" => Ok(Opcode::LdByte.value()  | reg | addr),
+        "SE" =>  Ok(opcodes!(SE)       | reg | addr),
+        "SNE" => Ok(opcodes!(SNE)      | reg | addr),
+        "RND" => Ok(opcodes!(RND)      | reg | addr),
+        "ADD" => Ok(opcodes!(ADD_BYTE) | reg | addr),
+        "LD" =>  Ok(opcodes!(LD_BYTE)  | reg | addr),
         _ =>Err("OPCODE: a instrução 'loadbyte', mas o opcode é desconhecido"),
     }
 }

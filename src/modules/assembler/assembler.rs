@@ -29,7 +29,7 @@ pub fn assembler(contents: String, output_addr: String)  {
 
     match &mut file {
         Ok(f) => {
-            f.write(&machine_code);
+            let _ = f.write(&machine_code);
             exit(0);
         },
         Err(e) => {
