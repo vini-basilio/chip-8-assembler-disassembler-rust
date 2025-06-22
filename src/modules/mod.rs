@@ -1,4 +1,5 @@
 
 pub mod instruction_parse;
-pub mod patterns;
+mod patterns;
 mod utils;
+pub mod assembler;
