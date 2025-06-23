@@ -25,9 +25,9 @@ O projeto atualmente está em desenvolvimento e será portado para a lingua ingl
 Uso: chip-8-assembler-rust.exe COMMAND
 
 Commandos:  
-- assembler     :Converte um arquivo de assembly para ROM CHIP-8  
-- disassembler  :Converte uma ROM CHIP-8 para assembly legível  
-- help          :Imprime essas mensagens. Ao escolher um modo de CLI, passe os argumentos:|
+- assembler:     Converte um arquivo de assembly para ROM CHIP-8  
+- disassembler:  Converte uma ROM CHIP-8 para assembly legível  
+- help:          Imprime essas mensagens. Ao escolher um modo de CLI, passe os argumentos
 
 --input       "ENDEREÇO DO OBJETO DE MANIPULAÇÃO"  
 --output      "ENDEREÇO DO OBJETO DE CRIADO" (opcional)
