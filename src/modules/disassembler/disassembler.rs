@@ -2,11 +2,13 @@ use std::collections::VecDeque;
 use std::fs::File;
 use std::io::{BufReader, Read, Write};
 use std::process::exit;
+use indicatif::{ProgressBar, ProgressStyle};
 use crate::{opcodes};
 
 pub fn disassembler(contents: String, output_addr: String) {
     let reader = BufReader::new(File::open(contents).unwrap());
     let mut buffer = Vec::new();
+
 
     for byte_or_error in reader.bytes() {
         match byte_or_error {
@@ -18,12 +20,22 @@ pub fn disassembler(contents: String, output_addr: String) {
         }
     }
 
+    let bar = ProgressBar::new((buffer.len() - 2) as u64);
+    bar.set_style(ProgressStyle::with_template("[{bar:50}] {pos:>3}/{len:3}")
+        .unwrap()
+        .progress_chars("#>-"));
+    let mut acc = 0;
+
+
     let  rom_start_at = 0x200;
     let mut index = 0usize;
     let mut result: Vec<String> = Vec::new();
     let mut address_data: VecDeque<usize> = VecDeque::new();
 
     while index < buffer.len() - 2 {
+        bar.inc(acc);
+        acc += 2;
+
         if address_data.len() > 1 {
             let start_address = address_data[0].saturating_sub(rom_start_at);
             if index == start_address {
@@ -32,7 +44,6 @@ pub fn disassembler(contents: String, output_addr: String) {
                     result.push(format!("0x{:02X}", buffer[index]));
                     index += 1;
                 }
-                println!("{}", index);
                 address_data.pop_front();
                 address_data.pop_front();
                 continue;
@@ -42,16 +53,21 @@ pub fn disassembler(contents: String, output_addr: String) {
         result.push(format!("{}", parse(opcode, &mut address_data)));
     }
 
+
+    bar.finish();
+
+
     let mut path = std::path::PathBuf::from(output_addr);
     path.set_extension("txt");
 
     let mut file =  File::create(path);
-
+    println!("Salvando...");
     match &mut file {
         Ok(f) => {
             for line in result {
                 writeln!(f, "{}", line).expect("Erro ao escrever o arquivo no arquivo final");
             }
+            println!("Terminado!");
             exit(0);
         },
         Err(e) => {

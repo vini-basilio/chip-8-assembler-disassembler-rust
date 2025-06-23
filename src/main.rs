@@ -1,5 +1,5 @@
 use std::fs;
-use clap::{Parser, Subcommand};
+use clap::{Command, Parser, Subcommand};
 use crate::modules::assembler::assembler::assembler;
 use crate::modules::disassembler::disassembler::disassembler;
 
@@ -41,6 +41,7 @@ enum Commands {
 
 fn main() {
 
+
     let cli = Cli::parse();
     match cli.command {
         Commands::Assembler { input, output } => {
@@ -49,7 +50,7 @@ fn main() {
                 Some(path) => path,
             };
 
-            println!("Montando: {:?} -> {:?}", input, output);
+            println!("Assembler sendo iniciado");
             let contents = fs::read_to_string(input).expect("Não foi possível abrir o arquivo");
             assembler(contents, output);
         }
@@ -59,8 +60,9 @@ fn main() {
                 Some(path) => path,
             };
 
-            println!("Desmontando: {:?} -> {:?}", input, output);
+            println!("Disassembler sendo iniciado");
             disassembler(input, output);
         }
     }
 }
+
