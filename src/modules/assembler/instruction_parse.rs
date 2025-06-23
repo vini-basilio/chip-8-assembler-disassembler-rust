@@ -28,13 +28,6 @@ fn instruction_type(tokens: &[&str]) -> Result<InstructionKinds, &'static str> {
 fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Result<(u8, u8),  &'static str>{
     match instruction_kind {
         InstructionKinds::Simple => {
-            if tokens[0].starts_with("0x") {
-                let cleaned = &tokens[0].trim_start_matches("0x");
-                return match u16::from_str_radix(cleaned, 16) {
-                    Ok(n) => Ok(convert_hexa_two_nibble(n)),
-                    Err(_e) => Err("Erro ao converter o asset para bit"),
-                }
-            }
             let opcode = instruction_simple_opcode(tokens[0])?;
             Ok(convert_hexa_two_nibble(opcode))
         },
@@ -85,7 +78,7 @@ fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Re
             
             let addr = valid_u8_address(tokens[3])?;
             Ok(convert_hexa_two_nibble(opcodes!(DRAW) | regs | addr))
-        }
+        },
     }
 }
 

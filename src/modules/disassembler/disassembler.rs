@@ -1,10 +1,76 @@
+use std::collections::VecDeque;
+use std::fs::File;
+use std::io::{BufReader, Read, Write};
+use std::process::exit;
 use crate::{opcodes};
 
-fn disassembler(contents: String, output_addr: String) {
-    
+pub fn disassembler(contents: String, output_addr: String) {
+    let reader = BufReader::new(File::open(contents).unwrap());
+    let mut buffer = Vec::new();
+
+    for byte_or_error in reader.bytes() {
+        match byte_or_error {
+            Ok(b)=>  buffer.push(b),
+            Err(e) => {
+                eprintln!("Erro ao ler o arquivo da ROM {:?}", e);
+                exit(1);
+            },
+        }
+    }
+
+    let  rom_start_at = 0x200;
+    let mut index = 0usize;
+    let mut result: Vec<String> = Vec::new();
+    let mut address_data: VecDeque<usize> = VecDeque::new();
+
+    while index < buffer.len() - 2 {
+        if address_data.len() > 1 {
+            let start_address = address_data[0].saturating_sub(rom_start_at);
+            if index == start_address {
+                let final_address = address_data[1].saturating_sub(rom_start_at);
+                while index < final_address  {
+                    result.push(format!("0x{:02X}", buffer[index]));
+                    index += 1;
+                }
+                println!("{}", index);
+                address_data.pop_front();
+                address_data.pop_front();
+                continue;
+            }
+        }
+        let opcode = extract_opcode(&mut buffer, &mut index);
+        result.push(format!("{}", parse(opcode, &mut address_data)));
+    }
+
+    let mut path = std::path::PathBuf::from(output_addr);
+    path.set_extension("txt");
+
+    let mut file =  File::create(path);
+
+    match &mut file {
+        Ok(f) => {
+            for line in result {
+                writeln!(f, "{}", line).expect("Erro ao escrever o arquivo no arquivo final");
+            }
+            exit(0);
+        },
+        Err(e) => {
+            eprintln!("Erro ao criar o arquivo para salvar {:?}", e);
+            exit(1);
+        },
+    }
 }
 
-fn parse(opcode: u16) -> String {
+fn extract_opcode(buffer: &mut Vec<u8>, index: &mut usize) -> u16 {
+    let high = buffer[*index] as u16;
+    *index += 1;
+    let low = buffer[*index] as u16;
+    *index += 1;
+
+    (high << 8) | low
+}
+
+fn parse(opcode: u16, address: &mut VecDeque<usize>) -> String {
     match opcode & 0xF000 {
         // Simples
         0x0000 => match &opcode {
@@ -13,14 +79,17 @@ fn parse(opcode: u16) -> String {
                 _ => String::from("Error"),
         }
         // U12Address
-        opcodes!(JP_ONE) => format!("JP 0x{:03X}",    opcode),
-        opcodes!(CALL) => format!("CALL 0x{:03X}",    opcode),
-        opcodes!(LD_I) => format!("LD I, 0x{:03X}",   opcode),
-        opcodes!(JP_B) => format!("JP V0, 0x{:03X}",  opcode),
+        opcodes!(JP_ONE) => format!("JP 0x{:03X}",    opcode & 0xFFF),
+        opcodes!(CALL) => format!("CALL 0x{:03X}",    opcode & 0xFFF),
+        opcodes!(LD_I) => {
+            address.push_back((opcode & 0x0FFF) as usize);
+            format!("LD I, 0x{:03X}", (opcode & 0xFFF))
+        },
+        opcodes!(JP_B) => format!("JP V0, 0x{:03X}",  opcode & 0x0FFF),
         // LoadByte
         opcodes!(SE) => format!("SE V{:01X}, 0x{:02X}",          (opcode & 0x0F00) >> 8, opcode & 0x00FF),
         opcodes!(SNE) => format!("SNE V{:01X}, 0x{:02X}",        (opcode & 0x0F00) >> 8, opcode & 0x00FF),
-        opcodes!(LD_BYTE) => format!("LD DT, V{:01X}, 0x{:02X}", (opcode & 0x0F00) >> 8, opcode & 0x00FF),
+        opcodes!(LD_BYTE) => format!("LD V{:01X}, 0x{:02X}", (opcode & 0x0F00) >> 8, opcode & 0x00FF),
         opcodes!(ADD_BYTE) => format!("ADD V{:01X}, 0x{:02X}",   (opcode & 0x0F00) >> 8, opcode & 0x00FF),
         opcodes!(RND) => format!("RND V{:01X}, 0x{:02X}",        (opcode & 0x0F00) >> 8, opcode & 0x00FF),
         // Keyboard
@@ -64,18 +133,14 @@ fn parse(opcode: u16) -> String {
                 _ => String::from("Error"),
             }
         }
-        opcodes!(DRAW) => format!("DRW V{:01X}, V{:01X}, 0x{:01X}", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4, opcode & 0x00F),
+        0xD000 => {
+            if let Some(&start_address) = address.get(address.len() - 1) {
+                let size = (opcode & 0x000F) as usize;
+                let final_addr = start_address + size ;
+                address.push_back(final_addr);
+            }
+            format!("DRW V{:01X}, V{:01X}, 0x{:01X}", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4, opcode & 0x000F)
+        },
             _ => String::from("Error"),
-    }
-}
-
-
-#[cfg(test)]
-pub mod disassembler_tests {
-    use crate::modules::disassembler::disassembler::disassembler;
-
-    #[test]
-    fn test(){
-      
     }
 }

@@ -9,6 +9,21 @@ pub fn assembler(contents: String, output_addr: String)  {
     for line in contents.lines() {
         println!("Lendo: {}", line);
         let tokens: Vec<&str> = line.split_whitespace().collect();
+        if tokens[0].starts_with("0x") {
+            let cleaned = &tokens[0].trim_start_matches("0x");
+            match u16::from_str_radix(cleaned, 16) {
+                Ok(n) => {
+                    machine_code.push(n as u8);
+                    continue;
+                },
+                Err(_e) => {
+                    eprintln!("Erro ao converter o asset para bit");
+                    exit(1);
+                }
+                ,
+            }
+        }
+
         match parse_instruction(tokens) {
             Ok(op) => {
                 machine_code.push(op.0);
@@ -33,7 +48,7 @@ pub fn assembler(contents: String, output_addr: String)  {
             exit(0);
         },
         Err(e) => {
-            eprintln!("Erro ao criar o arquivo {:?}", e);
+            eprintln!("Erro ao criar o arquivo para salvar {:?}", e);
             exit(1);
         },
     }

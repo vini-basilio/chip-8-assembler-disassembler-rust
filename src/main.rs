@@ -1,6 +1,7 @@
 use std::fs;
 use clap::{Parser, Subcommand};
 use crate::modules::assembler::assembler::assembler;
+use crate::modules::disassembler::disassembler::disassembler;
 
 mod modules;
 
@@ -53,8 +54,13 @@ fn main() {
             assembler(contents, output);
         }
         Commands::Disassembler { input, output } => {
-            println!("Dissassemblando: {:?} -> {:?}", input, output);
+            let output: String = match output {
+                None => String::from("saida"),
+                Some(path) => path,
+            };
 
+            println!("Desmontando: {:?} -> {:?}", input, output);
+            disassembler(input, output);
         }
     }
 }
