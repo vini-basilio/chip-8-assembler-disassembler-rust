@@ -49,8 +49,8 @@ SE V2, 0x01
 
 ## Documentation
 For more information about supported instructions and implementation details, see:
-- [General Documentation](docs/Documentation.md)
-- [Test Documentation](docs/Tests.md)
+- [General Documentation](docs/Assembler-english/Documentation.md)
+- [Test Documentation](docs/Assembler-english/Tests.md)
 
 ## Contact
 [LinkedIn](www.linkedin.com/in/vinícius-basílio-93481b254)
