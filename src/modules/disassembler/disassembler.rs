@@ -41,7 +41,7 @@ pub fn disassembler(addr: String, output_addr: String) {
 
     bar.finish_and_clear();
     match salve_file(output_addr, result) {
-        Ok(f) => {
+        Ok(_) => {
             println!("Terminado!");
             exit(0);
         },
