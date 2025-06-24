@@ -5,10 +5,10 @@ Um assembler e disassembler para CHIP-8 implementado em Rust, focado em performa
 O projeto atualmente está em desenvolvimento e será portado para a lingua inglesa.
 
 ## Status do Projeto
-**Em Desenvolvimento** 
-
 - ✅ Core do Assembler
 - ✅ Interface CLI com Clap
+- ✅ Assembler básico
+- ✅ Disassemler básico
 
 ## Funcionalidades
 - Suporte completo ao conjunto de instruções CHIP-8
@@ -35,8 +35,14 @@ Commandos:
 exemplo:  chip-8-assembler-rust.exe assembler --input "minha_rom.txt"    
 exemplo:  chip-8-assembler-rust.exe disassembler --input "minha_rom.ch8"
 
-Especial para o modo disassembler:
-- start: recebe um argumento usize, como 100, sendo 200 o padrão. Alterar essa flag diz que a rom começa em um local alternativo na memória e isso afeta os calculos de assets.
+### Tipo de formato esperado
+Este projeto tem como foco ser educacional, por isso, dei foco apenas no básico. O arquivo de assembler esperado deve apenas conter instruções como no exemplo abaixo.
+
+````txt
+LD I, 0x21E
+RND V2, 0x01
+SE V2, 0x01
+````
 
 ## Documentação
 Para mais informações sobre as instruções suportadas e detalhes de implementação, consulte:
@@ -48,3 +54,4 @@ Para mais informações sobre as instruções suportadas e detalhes de implement
 
 ## Agradecimentos
 - [Documentação CHIP-8](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM)
+- [Algoritmo do disassembler](https://medium.com/@sebastien.luc.legrand/chip-8-emulation-part-3-09e439c2b7b0)
