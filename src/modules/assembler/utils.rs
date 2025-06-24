@@ -5,7 +5,7 @@ pub fn two_token(tokens: &[&str]) -> Result<InstructionKinds,  &'static str>{
     match tokens[0] {
         "JP" |  "CALL" => Ok(InstructionKinds::U12Address),
         _  if tokens[1].starts_with('V') => Ok(InstructionKinds::Keyboard),
-        _ => Err("Instrução de dois tokens inválida"),
+        _ => Err("Malformed instruction with two tokens"),
     }
 }
 pub fn three_token(tokens: &[&str])-> Result<InstructionKinds,  &'static str>{
@@ -15,12 +15,12 @@ pub fn three_token(tokens: &[&str])-> Result<InstructionKinds,  &'static str>{
         "SHR", "SHL"];
 
     if ! allowed_first_tokens.contains(&tokens[0]) {
-        return  Err("Instrução de três tokens inválida");
+        return Err("Malformed instruction with three tokens")
     }
     let t1 = tokens[1];
     let t2 = tokens[2];
 
-    // BNNN é o único edge case que não funciona nesse sistema
+    // BNNN need a special handler
     if tokens[0] == "JP" && t1.starts_with("V") && t2.starts_with("0x") {
         return Ok(InstructionKinds::U12Address)
     }
@@ -31,14 +31,15 @@ pub fn three_token(tokens: &[&str])-> Result<InstructionKinds,  &'static str>{
         (true, false, true) => Ok(InstructionKinds::Logical),
         (false, false, true) => Ok(InstructionKinds::FLabelReg),
         (false, true, false) => Ok(InstructionKinds::U12Address),
-        _ => Err("Instrução de três tokens inválida"),
+        _ => Err("Malformed instruction with three tokens"),
     }
 }
+
 pub fn four_token(tokens: &[&str])-> Result<InstructionKinds,  &'static str>{
     match tokens[0] {
         "SHR" | "SHL" if tokens[1].starts_with('V') => Ok(InstructionKinds::LogicalExceptions),
         "DRW"  => Ok(InstructionKinds::Draw),
-        _ => Err("Instrução de quatro tokens inválida"),
+        _ => Err("Malformed instruction with four tokens"),
     }
 }
 
@@ -52,8 +53,8 @@ pub fn valid_u12_address(address: &str) -> Result<u16,  &'static str> {
     let cleaned = address.trim_start_matches("0x");
     match u16::from_str_radix(cleaned, 16) {
         Ok(n) if n <= 0x0FFF => Ok(n),
-        Ok(_) => Err("Endereço de 12 bits maior que número máximo"),
-        Err(_e) => Err("Erro ao converter o endereço de 12 bit"),
+        Ok(_) => Err("Address out of 12-bit range"),
+        Err(_e) => Err("Failed to parse 12-bit address"),
     }
 }
 
@@ -61,8 +62,8 @@ pub fn valid_u8_address(address: &str) -> Result<u16,  &'static str> {
     let cleaned = address.trim_start_matches("0x");
     match u16::from_str_radix(cleaned, 16) {
         Ok(n) if n <= 0x00FF => Ok(n),
-        Ok(_) => Err("Endereço de 8 bits maior que número máximo"),
-        Err(_e) => Err("Erro ao converter o endereço de 8 bit"),
+        Ok(_) => Err("Address out of 8-bit range"),
+        Err(_e) => Err("Failed to parse 8-bit address"),
     }
 }
 
@@ -70,14 +71,14 @@ pub fn valid_reg(reg: &str) -> Result<u16,  &'static str> {
     let cleaned = reg.replace(&[',', 'V', '}'], &"");
     match u16::from_str_radix(&cleaned, 16) {
         Ok(n) if n <= 0x000F => Ok(n),
-        Ok(_) => Err("Registrador não encontrado"),
-        Err(_e) => Err("Erro ao converter o registrador"),
+        Ok(_) => Err("Unkown register"),
+        Err(_e) => Err("Failed to parse register"),
     }
 }
 
 pub fn handle_reg(s:&str, shift: i8, should_has_comma: bool) ->Result<u16,  &'static str> {
     if should_has_comma && !s.ends_with(','){
-    return Err("Esperava encontrar uma vírgula")
+    return Err("Expected a comma")
     }
     let reg = valid_reg(s)?;
     Ok(reg << shift)
@@ -87,7 +88,7 @@ pub fn instruction_simple_opcode(name :&str)  ->Result<u16, &'static str> {
     match name {
         "CLS" => Ok(opcodes!(CLS)),
         "RET" => Ok(opcodes!(RET)),
-        _ => Err("OPCODE: a instrução 'simple', mas o opcode é desconhecido"),
+        _ => Err("OPCODE: Unknown opcode for 'simple' instruction"),
     }
 }
 
@@ -95,7 +96,7 @@ pub fn instruction_u12addr_opcode(tokens: &[&str])  ->Result<u16, &'static str> 
     match tokens.len() {
         2 => {
             if !tokens[1].starts_with("0x") {
-                return Err("OPCODE: a instrução 'u12addr', mas o opcode é desconhecido")
+                return Err("OPCODE: Unknown opcode for 'u12addr' instruction");
             }
             match tokens[0] {
                 "JP" => {
@@ -105,13 +106,13 @@ pub fn instruction_u12addr_opcode(tokens: &[&str])  ->Result<u16, &'static str> 
                 "CALL" => {
                     let addr_token_one = valid_u12_address(tokens[1])?;
                     Ok(opcodes!(CALL) | addr_token_one)
-                }
-                _ => Err("OPCODE: a instrução 'u12addr', mas o opcode é desconhecido"),
+                }  
+                _ => Err("OPCODE: Unknown opcode for 'u12addr' instruction"),
             }
         }
         3 => {
             if !tokens[2].starts_with("0x") {
-                return Err("OPCODE: a instrução 'u12addr', mas o opcode é desconhecido")
+                return Err("OPCODE: Unknown opcode for 'u12addr' instruction")
             }
             match tokens[0] {
                 "LD" if tokens[1] == "I," => {
@@ -122,10 +123,10 @@ pub fn instruction_u12addr_opcode(tokens: &[&str])  ->Result<u16, &'static str> 
                     let addr_token_one = valid_u12_address(tokens[2])?;
                     Ok(opcodes!(JP_B) | addr_token_one)
                 }
-                _ => Err("OPCODE: a instrução 'u12addr', mas o opcode é desconhecido"),
+                _ => Err("OPCODE: Unknown opcode for 'u12addr' instruction"),
             }
         }
-        _ => Err("OPCODE: a instrução 'u12addr', mas o opcode é desconhecido"),
+        _ => Err("OPCODE: Unknown opcode for 'u12addr' instruction"),
     }
 }
 
@@ -141,7 +142,7 @@ pub fn instruction_logical_opcode(tokens: &[&str])  ->Result<u16, &'static str> 
         "SUB" => Ok(opcodes!(SUB)         | regs ),
         "SUBN" => Ok(opcodes!(SUBN)       | regs ),
         "SNE" => Ok(opcodes!(SNE_REG)     | regs ),
-        _ =>  Err("OPCODE: a instrução 'logical', mas o opcode é desconhecido"),
+        _ => Err("OPCODE: Unknown opcode for 'logical' instruction"),
     }
 }
 
@@ -154,7 +155,7 @@ pub fn instruction_freglabel_opcode(tokens: &[&str])  ->Result<u16, &'static str
             ("LD","F,") =>   Ok(opcodes!(SET_SPRITE)     | reg ),
             ("LD","B,") =>   Ok(opcodes!(STORE_BCD)      | reg ),
             ("LD","[I],") => Ok(opcodes!(STORE_REG_MEMO) | reg ),
-            _ =>  Err("OPCODE: a instrução 'freglabel', mas o opcode é desconhecido"),
+            _ => Err("OPCODE: Unknown opcode for 'freglabel' instruction"),
     }
 }
 
@@ -164,7 +165,7 @@ pub fn instruction_flabelreg_opcode(tokens: &[&str])  ->Result<u16, &'static str
         "[I]" => Ok(opcodes!(REG_FROM_MEMO) | reg ),
         "DT" =>  Ok(opcodes!(DT_REG)        | reg ),
         "K" =>   Ok(opcodes!(WAIT_KEY)      | reg ),
-        _ =>  Err("OPCODE: a instrução 'flabelreg', mas o opcode é desconhecido"),
+        _ => Err("OPCODE: Unknown opcode for 'flabelreg' instruction"),
     }
 }
 
@@ -177,6 +178,6 @@ pub fn instruction_loadbyte_opcode(tokens: &[&str])  ->Result<u16, &'static str>
         "RND" => Ok(opcodes!(RND)      | reg | addr),
         "ADD" => Ok(opcodes!(ADD_BYTE) | reg | addr),
         "LD" =>  Ok(opcodes!(LD_BYTE)  | reg | addr),
-        _ =>Err("OPCODE: a instrução 'loadbyte', mas o opcode é desconhecido"),
+        _ => Err("OPCODE: Unknown opcode for 'loadbyte' instruction"),
     }
 }

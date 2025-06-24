@@ -10,7 +10,7 @@ pub fn disassembler(addr: String, output_addr: String) {
     const ROM_START_AT: usize = 0x200;
 
     let file  = File::open(addr).unwrap_or_else(|e| {
-        eprintln!("Não foi possível abrir o arquivo");
+        eprintln!("x: Error: Unable to open ROM file");
         exit(1)
     });
 
@@ -32,22 +32,20 @@ pub fn disassembler(addr: String, output_addr: String) {
     let bar = ProgressBar::new_spinner();
     bar.enable_steady_tick(Duration::from_millis(10));
 
-    println!("Mapeando o código");
+    println!("-> Scanning binary for code segments");
     let codemap= map_rom(ROM_START_AT, &mut buffer, max_address);
-
-    println!("Gerando o arquivo final");
-
+    println!("-> Generating Assembly File");
     let result = render_rom(ROM_START_AT, buffer, max_address, codemap);
 
     bar.finish_and_clear();
     match salve_file(output_addr, result) {
         Ok(_) => {
-            println!("Terminado!");
+            println!("Done");
             exit(0);
         },
         Err(e) => {
-            eprintln!("Erro ao criar o arquivo para salvar {:?}", e);
-            exit(1);
+            eprintln!("x: Error: Unable to create assembly file") ;
+            eprintln!("x: Description: {:?}", e);
         },
     }
 }

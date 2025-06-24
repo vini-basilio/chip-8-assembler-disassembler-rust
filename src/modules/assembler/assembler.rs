@@ -3,7 +3,12 @@ use std::io::Write;
 use std::process::exit;
 use indicatif::{ProgressBar, ProgressStyle};
 use crate::modules::assembler::instruction_parse::parse_instruction;
+
+
+/// Core assembler implementation for CHIP-8.
+/// Converts human-readable assembly code into CHIP-8 binary format.
 pub fn assembler(contents: String, output_addr: String)  {
+    // Buffer to store the ROM while parsing the code
     let mut machine_code: Vec<u8> = Vec::new();
 
     let bar = ProgressBar::new(contents.len() as u64);
@@ -18,7 +23,10 @@ pub fn assembler(contents: String, output_addr: String)  {
         bar.set_position(acc);
         acc += 1;
 
+        // Splits the input line into tokens using whitespace as delimiter
         let tokens: Vec<&str> = line.split_whitespace().collect();
+
+        // If the line defines an asset, store it directly in the working buffer
         if tokens[0].starts_with("0x") {
             let cleaned = &tokens[0].trim_start_matches("0x");
             match u16::from_str_radix(cleaned, 16) {
@@ -27,7 +35,7 @@ pub fn assembler(contents: String, output_addr: String)  {
                     continue;
                 },
                 Err(_e) => {
-                    eprintln!("Erro ao converter o asset para bit");
+                    eprintln!("x: Error: Unable to parse asset");
                     exit(1);
                 }
                 ,
@@ -40,7 +48,7 @@ pub fn assembler(contents: String, output_addr: String)  {
                 machine_code.push(op.1);
             },
             Err(e) => {
-                eprintln!("ERRO DO TIPO {}", e);
+                eprintln!("x: error {}", e);
                 exit(1);
             },
         }
@@ -48,7 +56,7 @@ pub fn assembler(contents: String, output_addr: String)  {
     }
     bar.finish();
 
-    println!("Salvando...");
+    println!("-> Saving...");
 
     let mut path = std::path::PathBuf::from(output_addr);
     path.set_extension("ch8");
@@ -58,11 +66,12 @@ pub fn assembler(contents: String, output_addr: String)  {
     match &mut file {
         Ok(f) => {
             let _ = f.write(&machine_code);
-            println!("Terminado!");
+            println!("Done!");
             exit(0);
         },
         Err(e) => {
-            eprintln!("Erro ao criar o arquivo para salvar {:?}", e);
+            eprintln!("x: Error: Unable to create ROM file") ;
+            eprintln!("x: Description: {:?}", e);
             exit(1);
         },
     }

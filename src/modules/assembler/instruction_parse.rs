@@ -2,26 +2,22 @@ use crate::modules::patterns::{InstructionKinds};
 use crate::modules::assembler::utils::*;
 use crate::opcodes;
 
-/// Analisa uma instrução CHIP-8 e retorna seu opcode correspondente
-///
-/// # Argumentos
-/// * `tokens` - Um slice de strings representando os componentes da instrução
-///
-/// # Retornos
-/// * `Ok((u8, u8))` - Uma tupla com o opcode para ser salvo
-/// * `Err(&str)` - Mensagem de erro se a instrução for inválida
+/// Receives a list of tokens representing a single instruction line,
+/// determines its pattern, validates the tokens, and returns the assembled opcode.
+/// Returns an error if the instruction format is invalid or unsupported.
 pub fn parse_instruction(tokens: Vec<&str>) -> Result<(u8, u8), &'static str> {
     let instruction_pattern = instruction_type(&tokens)?;
     let opcode = valid_and_assemble(&tokens, instruction_pattern)?;
     Ok(opcode)
 }
+
 fn instruction_type(tokens: &[&str]) -> Result<InstructionKinds, &'static str> {
     match tokens.len() {
         1 =>  Ok(InstructionKinds::Simple),
         2 => two_token(tokens),
         3 => three_token(tokens),
-        4 => four_token(tokens),
-        _ => Err("Número de tokens inválido"),
+        4 => four_token(tokens),_ 
+        => Err("Unexpected number of tokens in instruction"),
     }
 }
 
@@ -40,7 +36,7 @@ fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Re
             match tokens[0] {
                 "SKP" =>  Ok(convert_hexa_two_nibble(opcodes!(SKP)  | reg)),
                 "SKNP" => Ok(convert_hexa_two_nibble(opcodes!(SKNP) | reg)),
-                _ => Err("OPCODE: a instrução 'keyboard', mas o opcode é desconhecido"),
+                _ => Err("OPCODE: Unkown opcode for 'keyboard' instruction"),
             }
         },
         InstructionKinds::Logical => {
@@ -67,10 +63,10 @@ fn valid_and_assemble(tokens: &[&str], instruction_kind: InstructionKinds) -> Re
                 return match tokens[0] {
                     "SHR" => Ok(convert_hexa_two_nibble(opcodes!(SHR) | regs)),
                     "SHL" => Ok(convert_hexa_two_nibble(opcodes!(SHL) | regs)),
-                    _ => Err("OPCODE: a instrução 'logicalExpections', mas o opcode é desconhecido"),
+                    _ => Err("OPCODE: Unkown opcode"),
                 }
             }
-            Err("OPCODE: a instrução 'logicalExpections', mas o opcode é desconhecido")
+            Err("OPCODE: Unkown opcode")
         }
         InstructionKinds::Draw => {
             let regs = handle_reg(tokens[1], 8, true)? | 

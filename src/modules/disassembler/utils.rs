@@ -1,5 +1,6 @@
 use crate::opcodes;
-
+/// Receives the program counter (PC), the ROM start address, and a mutable buffer containing the binary data.
+/// The buffer should be a vector of <u8>. Returns an Option<u16> containing the next opcode, or None if out of bounds.
 pub fn next_opcode(pc: u16, start_rom: u16, buffer: &mut Vec<u8>) -> Option<u16> {
     let offset = (pc - start_rom) as usize;
     if offset + 1 < buffer.len() {
@@ -10,7 +11,7 @@ pub fn next_opcode(pc: u16, start_rom: u16, buffer: &mut Vec<u8>) -> Option<u16>
         None
     }
 }
-
+/// Converts a CHIP-8 opcode into its assembler string representation.
 pub fn parse(opcode: u16) -> String {
     match opcode & 0xF000 {
         // Simples
