@@ -11,6 +11,7 @@ pub enum InstructionKinds {
     Draw,
 }
 
+/// Contains regex patterns used for parsing CHIP-8 assembly instructions.
 #[macro_export] macro_rules! opcodes {
      // Simples
     (CLS) =>  {0x00E0};
