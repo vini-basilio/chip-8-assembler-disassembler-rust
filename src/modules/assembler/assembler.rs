@@ -1,13 +1,23 @@
 use std::fs::File;
 use std::io::Write;
 use std::process::exit;
+use indicatif::{ProgressBar, ProgressStyle};
 use crate::modules::assembler::instruction_parse::parse_instruction;
-
 pub fn assembler(contents: String, output_addr: String)  {
     let mut machine_code: Vec<u8> = Vec::new();
 
+    let bar = ProgressBar::new(contents.len() as u64);
+    bar.set_style(ProgressStyle::with_template("[{bar:50}] {pos:>3}/{len:3}")
+        .unwrap()
+        .progress_chars("#>-"));
+
+    let mut acc = 0;
+
     for line in contents.lines() {
-        println!("Lendo: {}", line);
+
+        bar.set_position(acc);
+        acc += 1;
+
         let tokens: Vec<&str> = line.split_whitespace().collect();
         if tokens[0].starts_with("0x") {
             let cleaned = &tokens[0].trim_start_matches("0x");
@@ -34,9 +44,12 @@ pub fn assembler(contents: String, output_addr: String)  {
                 exit(1);
             },
         }
-    }
 
-    display_binariy(&machine_code, 8);
+    }
+    bar.finish();
+
+    println!("Salvando...");
+
     let mut path = std::path::PathBuf::from(output_addr);
     path.set_extension("ch8");
 
@@ -45,23 +58,12 @@ pub fn assembler(contents: String, output_addr: String)  {
     match &mut file {
         Ok(f) => {
             let _ = f.write(&machine_code);
+            println!("Terminado!");
             exit(0);
         },
         Err(e) => {
             eprintln!("Erro ao criar o arquivo para salvar {:?}", e);
             exit(1);
         },
-    }
-
-}
-
-fn display_binariy(machine_code: &Vec<u8>, bytes_per_line: i32) {
-    let mut counter = 0;
-    for op in machine_code {
-        if counter % bytes_per_line == 0 {
-            println!("");
-        }
-        print!("{:#04x} ", op);
-        counter += 1;
     }
 }

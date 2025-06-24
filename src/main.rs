@@ -1,4 +1,5 @@
 use std::fs;
+use std::process::exit;
 use clap::{Parser, Subcommand};
 use crate::modules::assembler::assembler::assembler;
 use crate::modules::disassembler::disassembler::disassembler;
@@ -35,11 +36,12 @@ enum Commands {
         input: String,
         /// Caminho de saída para o arquivo .txt
         #[arg(short, long)]
-        output: Option<String>,
+        output: Option<String>
     },
 }
 
 fn main() {
+
 
     let cli = Cli::parse();
     match cli.command {
@@ -49,8 +51,12 @@ fn main() {
                 Some(path) => path,
             };
 
-            println!("Montando: {:?} -> {:?}", input, output);
-            let contents = fs::read_to_string(input).expect("Não foi possível abrir o arquivo");
+            println!("Assembler sendo iniciado");
+            let contents = fs::read_to_string(input).unwrap_or_else(|e| {
+                eprintln!("Não foi possível abrir o arquivo");
+                exit(1)
+            });
+
             assembler(contents, output);
         }
         Commands::Disassembler { input, output } => {
@@ -59,8 +65,9 @@ fn main() {
                 Some(path) => path,
             };
 
-            println!("Desmontando: {:?} -> {:?}", input, output);
+            println!("Disassembler sendo iniciado");
             disassembler(input, output);
         }
     }
 }
+
