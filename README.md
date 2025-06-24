@@ -8,7 +8,7 @@ O projeto atualmente está em desenvolvimento e será portado para a lingua ingl
 **Em Desenvolvimento** 
 
 - ✅ Core do Assembler
--  Interface CLI com Clap
+- ✅ Interface CLI com Clap
 
 ## Funcionalidades
 - Suporte completo ao conjunto de instruções CHIP-8
@@ -34,6 +34,9 @@ Commandos:
 
 exemplo:  chip-8-assembler-rust.exe assembler --input "minha_rom.txt"    
 exemplo:  chip-8-assembler-rust.exe disassembler --input "minha_rom.ch8"
+
+Especial para o modo disassembler:
+- start: recebe um argumento usize, como 100, sendo 200 o padrão. Alterar essa flag diz que a rom começa em um local alternativo na memória e isso afeta os calculos de assets.
 
 ## Documentação
 Para mais informações sobre as instruções suportadas e detalhes de implementação, consulte:

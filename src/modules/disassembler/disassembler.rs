@@ -1,11 +1,11 @@
-use std::collections::VecDeque;
+use std::collections::{HashSet, VecDeque};
 use std::fs::File;
 use std::io::{BufReader, Read, Write};
 use std::process::exit;
 use indicatif::{ProgressBar, ProgressStyle};
 use crate::{opcodes};
 
-pub fn disassembler(contents: String, output_addr: String) {
+pub fn disassembler(contents: String, output_addr: String, rom_start_at: usize) {
     let reader = BufReader::new(File::open(contents).unwrap());
     let mut buffer = Vec::new();
 
@@ -20,41 +20,75 @@ pub fn disassembler(contents: String, output_addr: String) {
         }
     }
 
-    let bar = ProgressBar::new((buffer.len() - 2) as u64);
-    bar.set_style(ProgressStyle::with_template("[{bar:50}] {pos:>3}/{len:3}")
-        .unwrap()
-        .progress_chars("#>-"));
-    let mut acc = 0;
-
-
-    let  rom_start_at = 0x200;
-    let mut index = 0usize;
+    let max_address = buffer.len() + rom_start_at;
     let mut result: Vec<String> = Vec::new();
-    let mut address_data: VecDeque<usize> = VecDeque::new();
+    // fila pra guardar segmentos de código (endereços)
+    let mut segments: VecDeque<usize> = VecDeque::new();
+    // endereços-alvo (labels)
+    let mut labels: HashSet<usize> = HashSet::new();
+    // mapa de código (endereços já processados)
+    let mut codemap: HashSet<usize> = HashSet::new();
 
-    while index < buffer.len() - 2 {
-        bar.inc(acc);
-        acc += 2;
+    segments.push_back(rom_start_at);
+    
+    while let Some(mut pc) = segments.pop_front() {
+        while pc < max_address && !codemap.contains(&pc) {
 
-        if address_data.len() > 1 {
-            let start_address = address_data[0].saturating_sub(rom_start_at);
-            if index == start_address {
-                let final_address = address_data[1].saturating_sub(rom_start_at);
-                while index < final_address  {
-                    result.push(format!("0x{:02X}", buffer[index]));
-                    index += 1;
+           let opcode = next_opcode(pc as u16, rom_start_at as u16, &mut buffer).unwrap();
+            codemap.insert(pc); // marca o endereço correto do opcode
+            codemap.insert(pc + 1);
+            pc += 2;
+
+            match opcode & 0xF000 {
+                0x1000 => {
+                    pc = (opcode & 0x0FFF) as usize;
+                    // labels.insert(pc);
                 }
-                address_data.pop_front();
-                address_data.pop_front();
-                continue;
+                0x2000 => {
+                    segments.push_front(pc); // salva onde estava
+                    pc = (opcode & 0x0FFF) as usize;
+                    // labels.insert(pc);
+                }
+                0x3000 | 0x4000 | 0x5000 | 0x9000 => {
+                    segments.push_front(pc + 2);
+                }
+                0xE000 => {
+                    match opcode & 0xF0FF {
+                        0xE09E | 0xE0A1 => segments.push_front(pc + 2),
+                        _ => {}
+                    }
+                }
+                // 0xA000 => {
+                //     labels.insert((opcode & 0x0FFF) as usize);
+                // }
+                0xB000 => {
+                    eprintln!("Instrução JP V0, addr não suportada");
+                    exit(1);
+                }
+                _ => {}
             }
         }
-        let opcode = extract_opcode(&mut buffer, &mut index);
-        result.push(format!("{}", parse(opcode, &mut address_data)));
     }
 
+    let mut pc = rom_start_at;
+    while pc < max_address {
+        // if labels.contains(&pc) {
+        //     result.push(format!("L{:03X}:", pc));
+        // }
 
-    bar.finish();
+        if !codemap.contains(&pc) {
+            result.push(format!("0x{:02X}", buffer[pc - rom_start_at]));
+            pc += 1;
+            continue;
+        }
+
+        if let Some(opcode) = next_opcode(pc as u16, rom_start_at as u16, &mut buffer) {
+            result.push(parse(opcode));
+            pc += 2;
+        } else {
+            break;
+        }
+    }
 
 
     let mut path = std::path::PathBuf::from(output_addr);
@@ -76,17 +110,18 @@ pub fn disassembler(contents: String, output_addr: String) {
         },
     }
 }
-
-fn extract_opcode(buffer: &mut Vec<u8>, index: &mut usize) -> u16 {
-    let high = buffer[*index] as u16;
-    *index += 1;
-    let low = buffer[*index] as u16;
-    *index += 1;
-
-    (high << 8) | low
+pub fn next_opcode(pc: u16, start_rom: u16, buffer: &mut Vec<u8>) -> Option<u16> {
+    let offset = (pc - start_rom) as usize;
+    if offset + 1 < buffer.len() {
+        let high = buffer[offset] as u16;
+        let low = buffer[offset + 1] as u16;
+        Some((high << 8) | low)
+    } else {
+        None
+    }
 }
 
-fn parse(opcode: u16, address: &mut VecDeque<usize>) -> String {
+fn parse(opcode: u16) -> String {
     match opcode & 0xF000 {
         // Simples
         0x0000 => match &opcode {
@@ -97,11 +132,7 @@ fn parse(opcode: u16, address: &mut VecDeque<usize>) -> String {
         // U12Address
         opcodes!(JP_ONE) => format!("JP 0x{:03X}",    opcode & 0xFFF),
         opcodes!(CALL) => format!("CALL 0x{:03X}",    opcode & 0xFFF),
-        opcodes!(LD_I) => {
-            address.push_back((opcode & 0x0FFF) as usize);
-            format!("LD I, 0x{:03X}", (opcode & 0xFFF))
-        },
-        opcodes!(JP_B) => format!("JP V0, 0x{:03X}",  opcode & 0x0FFF),
+        opcodes!(LD_I) => format!("LD I, 0x{:03X}", (opcode & 0xFFF)),
         // LoadByte
         opcodes!(SE) => format!("SE V{:01X}, 0x{:02X}",          (opcode & 0x0F00) >> 8, opcode & 0x00FF),
         opcodes!(SNE) => format!("SNE V{:01X}, 0x{:02X}",        (opcode & 0x0F00) >> 8, opcode & 0x00FF),
@@ -149,14 +180,7 @@ fn parse(opcode: u16, address: &mut VecDeque<usize>) -> String {
                 _ => String::from("Error"),
             }
         }
-        0xD000 => {
-            if let Some(&start_address) = address.get(address.len() - 1) {
-                let size = (opcode & 0x000F) as usize;
-                let final_addr = start_address + size ;
-                address.push_back(final_addr);
-            }
-            format!("DRW V{:01X}, V{:01X}, 0x{:01X}", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4, opcode & 0x000F)
-        },
+        0xD000 => format!("DRW V{:01X}, V{:01X}, 0x{:01X}", (opcode & 0x0F00) >> 8, (opcode & 0x00F0) >> 4, opcode & 0x000F),
             _ => String::from("Error"),
     }
 }

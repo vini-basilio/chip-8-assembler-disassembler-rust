@@ -1,5 +1,5 @@
 use std::fs;
-use clap::{Command, Parser, Subcommand};
+use clap::{Parser, Subcommand};
 use crate::modules::assembler::assembler::assembler;
 use crate::modules::disassembler::disassembler::disassembler;
 
@@ -36,6 +36,9 @@ enum Commands {
         /// Caminho de saída para o arquivo .txt
         #[arg(short, long)]
         output: Option<String>,
+        /// Adiciona a flag de mudar onde a rom começa na memória. Mudando o calculo dos assets
+        #[arg(short, long)]
+        start: Option<usize>,
     },
 }
 
@@ -54,14 +57,14 @@ fn main() {
             let contents = fs::read_to_string(input).expect("Não foi possível abrir o arquivo");
             assembler(contents, output);
         }
-        Commands::Disassembler { input, output } => {
+        Commands::Disassembler { input, output, start } => {
             let output: String = match output {
                 None => String::from("saida"),
                 Some(path) => path,
             };
 
             println!("Disassembler sendo iniciado");
-            disassembler(input, output);
+            disassembler(input, output, start.unwrap_or(0x100));
         }
     }
 }
