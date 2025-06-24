@@ -9,7 +9,7 @@ mod modules;
 #[derive(Parser)]
 #[command(
     version,
-    about = "CLI para assembler e disassembler de ROMs CHIP-8",
+    about = "A command-line interface for assembling and disassembling CHIP-8 ROMs",
     author = "Vinicius B."
 )]
 
@@ -20,21 +20,21 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Converte um arquivo de assembly para ROM CHIP-8
+    /// Converts an assembly file to CHIP-8 ROM
     Assembler {
-        /// Caminho para o arquivo .txt de assembly
+        /// Path to the assembly .txt file
         #[arg(short, long)]
         input: String,
-        /// Caminho de saída para o arquivo .ch8
+        /// Output path for the .ch8 file
         #[arg(short, long)]
         output: Option<String>,
     },
-    /// Converte uma ROM CHIP-8 para assembly legível
+    /// Converts a CHIP-8 ROM to readable assembly
     Disassembler {
-        /// Caminho para a ROM .ch8
+        /// Path to the .ch8 ROM
         #[arg(short, long)]
         input: String,
-        /// Caminho de saída para o arquivo .txt
+        /// Output path for the .txt file
         #[arg(short, long)]
         output: Option<String>
     },
@@ -47,13 +47,13 @@ fn main() {
     match cli.command {
         Commands::Assembler { input, output } => {
             let output: String = match output {
-                None => String::from("saida"),
+                None => String::from("rom"),
                 Some(path) => path,
             };
 
-            println!("Assembler sendo iniciado");
+            println!(" === Starting Assembler mod === ");
             let contents = fs::read_to_string(input).unwrap_or_else(|e| {
-                eprintln!("Não foi possível abrir o arquivo");
+                eprintln!("x: Error: Unable to open assembler file!");
                 exit(1)
             });
 
@@ -61,13 +61,12 @@ fn main() {
         }
         Commands::Disassembler { input, output } => {
             let output: String = match output {
-                None => String::from("saida"),
+                None => String::from("assembler"),
                 Some(path) => path,
             };
 
-            println!("Disassembler sendo iniciado");
+            println!(" === Starting Disassembler mod === ");
             disassembler(input, output);
         }
     }
 }
-

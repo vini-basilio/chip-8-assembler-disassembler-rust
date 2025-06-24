@@ -48,7 +48,7 @@ pub fn assembler(contents: String, output_addr: String)  {
     }
     bar.finish();
 
-    println!("Salvando...");
+    println!("-> Saving...");
 
     let mut path = std::path::PathBuf::from(output_addr);
     path.set_extension("ch8");
@@ -58,11 +58,12 @@ pub fn assembler(contents: String, output_addr: String)  {
     match &mut file {
         Ok(f) => {
             let _ = f.write(&machine_code);
-            println!("Terminado!");
+            println!("Done!");
             exit(0);
         },
         Err(e) => {
-            eprintln!("Erro ao criar o arquivo para salvar {:?}", e);
+            eprintln!("x: Error: Unable to create ROM file") ;
+            eprintln!("x: Description: {:?}", e);
             exit(1);
         },
     }
